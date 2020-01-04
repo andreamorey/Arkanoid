@@ -2,35 +2,41 @@
 ;           PLAYER
 ; -----------------------------------------------------------------------------
 PLRINIT
-; INITIALIZES THE PLAYER
+; INITIALIZES THE PLAYER TO LEVEL 1
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            
             MOVE.W  #PINPOSX1,PPOSX
             MOVE.W  #PINWIDTH1,PWIDTH
-            
-          
             RTS
-            
 ; -----------------------------------------------------------------------------
-PLRREV
-; PLAYER REVIVES, INITIALIZE POSITION
+PLRLEV2
+; INITIALIZES THE PLAYER TO LEVEL 2
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            ;DEBERIAMOS CALCULAR LA POSICION NUEVA A PARTIR DE LA WIDTH QUE NOS PASEN
-            
-            MOVE.W  #PINPOSX1,PPOSX
-            MOVE.W  #PINWIDTH1,PWIDTH
-          
-            RTS
-
+            MOVE.W  #PINPOSX2,PPOSX
+            MOVE.W  #PINWIDTH2,PWIDTH
+            RTS        
 ; -----------------------------------------------------------------------------
-
-PLRUPD      
+PLRLEV3
+; INITIALIZES THE PLAYER TO LEVEL 3
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVE.W  #PINPOSX3,PPOSX
+            MOVE.W  #PINWIDTH3,PWIDTH
+            RTS     
+; -----------------------------------------------------------------------------
+PLRUPD
+; UPDATES THE POSITION, LIVES AND SCORE OF THE PLAYER
+; INPUT     - NONE
+; OUTPUT    - NONE
+; MODIFIES  - NONE
+; -----------------------------------------------------------------------------
             MOVEM.L D1-D2,-(A7)
             MOVE.B  KBDVAL,D1  
             ROR.B   #1,D1                   ;IZQUIERDA
@@ -55,8 +61,13 @@ PLRUPD
             MOVEM.L (A7)+,D1-D2
             RTS
 
-
+; -----------------------------------------------------------------------------
 PPLOT
+; PLOTS THE PLAYER ITS LIFE AND THE SCORE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
             MOVEM.L  D0-D5/A1,-(A7)
             ;PLOT THE PLATAFORM
             UTLSPEN #PCOLOR 
@@ -73,7 +84,7 @@ PPLOT
             ;PLOT LIFE
             MOVE.W  PLIVES,D5
             BEQ     .END
-            UTLSPEN #$00FFFFFF  
+            UTLSPEN #LIVECOLOR 
             UTLSFIL #LIVECOLOR
             SUB.W   #1,D5             
             MOVE.B  #87,D0
@@ -83,45 +94,34 @@ PPLOT
             MOVE.W  #LIVEPOSY,D2
             MOVE.W  D2,D4
             ADD.W   #LIVEHEIGHT,D4
-.LOOP           
+.LIFES           
             TRAP    #15
             MOVE.W  D3,D1
             ADD.W   #LIVEWIDTH,D3
-            DBRA    D5,.LOOP
+            DBRA    D5,.LIFES
             
             ;PLOT SCORE
-            UTLLOCT PSCORETX,PSCORETY            
-            
+            UTLLOCT PSCORETX,PSCORETY  
             UTLSFIL #$00000000
-            LEA     .TXTSCORE,A1              ;PONE EL TEXTO
+            LEA     .TXTSCORE,A1             
             MOVE.W  PSCORE,D1
             MOVE.B  #17,D0
             TRAP    #15
             
+            ;PLOT LEVEL
+            UTLLOCT PSCORETX,PSCORETY+2  
+            UTLSFIL #$00000000
+            LEA     .TXTLEVEL,A1              
+            MOVE.W  LEVEL,D1
+            MOVE.B  #17,D0
+            TRAP    #15
 .END            
             MOVEM.L (A7)+,D0-D5/A1
             RTS
             
 .TXTSCORE   DC.B    'SCORE: ',0
+.TXTLEVEL   DC.B    'LEVEL: ',0
             DS.W    0
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~16~
 *~Tab type~0~

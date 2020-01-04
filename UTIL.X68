@@ -12,8 +12,6 @@ UTLSPEN     MACRO
             MOVE.L  \1,D1
             TRAP    #15
             ENDM
-
-
 ; -----------------------------------------------------------------------------
 UTLSFIL     MACRO
 ; WRAPPER FOR SET FIL TRAP 15 TASK.
@@ -37,7 +35,6 @@ UTLLOCT     MACRO
             MOVE.B  #11,D0
             TRAP    #15
             ENDM
-   
 ; -----------------------------------------------------------------------------
 UTLSIZC     MACRO
 ; WRAPPER FOR SET SIZE AND COLOR TRAP 15 TASK.
@@ -63,9 +60,7 @@ UTLSNDS     MACRO
             TRAP    #15
             MOVE.B  #72,D0
             TRAP    #15
-            
             ENDM
-            
 ; -----------------------------------------------------------------------------
 UTLSNDST     MACRO
 ; WRAPPER FOR STOPPING WAV FILE TRAP 15 TASK
@@ -76,21 +71,12 @@ UTLSNDST     MACRO
             MOVE.L  #3,D2
             MOVE.B  #76,D0
             TRAP    #15
-            
             ENDM
 ; -----------------------------------------------------------------------------            
 UTLSVNAME  MACRO
 ;SAVES THE NAME OS THE PLAYER
 ;MAX CARACTERS: 20
 ; -----------------------------------------------------------------------------
-            MOVE.B  #80,D0
-            MOVE.L  #$00FFFFFF,D1           ;COLOR
-            TRAP    #15
-            
-            MOVE.W  #20<<8|20, D1           ;COLOCA
-            MOVE.B  #11,D0
-            TRAP    #15
-            
             LEA.L   .INSTRUCT,A1            ;hacer que escriba
             MOVE.B  #14,D0
             TRAP    #15
@@ -102,6 +88,7 @@ UTLSVNAME  MACRO
             RTS
 .INSTRUCT   DC.B    'ENTER YOUR NAME: ',0
             ENDM
+            
 ; -----------------------------------------------------------------------------
 ; =============================================================================
 ; UTILITY SUBROUTINES
@@ -113,14 +100,13 @@ UTLCHCOLW
 ;            D1.W BPOSY1
 ;            D2.W BPOSX2
 ;            D3.W BPOSY2
-; OUTPUT   - 
-; MODIFIES - 
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D3/A0,-(A7)
-            LEA.L   .COLLISIONS,A0
-            CMP.W   (A0)+,D1      ;UP
+            LEA.L   .COLLIS,A0
+            CMP.W   (A0)+,D1                ; UP
             BGT     .LEFT
-
             NEG.W   BSPEEDY
             CLR.W   BPOSY1
             MOVE.W  #BDIAMET,BPOSY2
@@ -133,7 +119,6 @@ UTLCHCOLW
             MOVE.W  #BDIAMET,BPOSX2
             JMP     .END
 .RIGHT      
-            
             CMP.W   (A0)+,D2
             BLT     .DOWN
             NEG.W   BSPEEDX
@@ -149,20 +134,19 @@ UTLCHCOLW
             MOVE.W  #SCRHEIGH,BPOSY2
             MOVE.W  #SCRHEIGH-BDIAMET,BPOSY1 
             SUB.W   #1,PLIVES                
-            BNE     .RESET               ;SALTA SI NO SE HAN AGOTADO LAS VIDAS              
+            BNE     .RESET               
             UTLSNDST
             UTLSNDS .SOUNDG,#1
             MOVE.W  #STAGOVR,(STANEXT)
             JMP     .END
 .RESET     
-            
             MOVE.W  #STASPACE,(STANEXT) 
            
 .END        
             MOVEM.L (A7)+,D0-D3/A0
             RTS
-.COLLISIONS DC.W    0,0,SCRCTRL,SCRHEIGH
-.SOUNDG      DC.L    'game over.wav',0
+.COLLIS     DC.W    0,0,SCRCTRL,SCRHEIGH
+.SOUNDG     DC.L    'game over.wav',0
 .SOUNDL     DC.L    'lose life.wav',0
 ; -----------------------------------------------------------------------------
 UTLCHCOLP
@@ -172,10 +156,9 @@ UTLCHCOLP
 ;            D2.W PPOSX2
 ;            D3.W PPOSY2
 ; OUTPUT   
-;           
 ; MODIFIES - D4,D5
 ; -----------------------------------------------------------------------------
-            MOVEM.L D4-D5,-(A7)
+            MOVEM.L D0-d3,-(A7)
             MOVE.W  #PPOSY,D4
             CMP.W   D4,D3
             BLT     .END                    ;SI ESTÁ MÁS A ARRIBA DE LA PLATAFORMA NO HAY COLISIÓN
@@ -214,20 +197,19 @@ UTLCHCOLP
             MOVE.W  D4,BSPEEDX
             JMP     .END
 
-.LADOS      NEG.W   BSPEEDX                 ;COLISIÓN CON LOS LADOS
-.END        MOVEM.L (A7)+,D4-D5 
+.LADOS      
+            NEG.W   BSPEEDX                 ;COLISIÓN CON LOS LADOS
+.END        
+            MOVEM.L (A7)+,D0-D3 
             RTS
-
-
 ; -----------------------------------------------------------------------------
 UTLCOLBL   
 ; CHECKS COLLISION WITH BLOCKS
-; INPUT    - POSITION BALL \1 X \2 Y TO CHECK COLLISION WITH BLOCK
+; INPUT    - 
 ; OUTPUT   
-;           
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-*            MOVEM.L D0-D7/A0,-(A7)            
+*            MOVEM.L D0-D3/D5-D7/A0,-(A7)            
             LSR.W   #4,D1           ;POSY/BLHEIGHT. D1 -> FILA
             MOVE.W  #BLROW-1,D2
             CMP.W   D1,D2           ;SI ESTÁ POR DEBAJO DE LA ÚLTIMA FILA SALTA DIRECTO A END
@@ -303,21 +285,23 @@ UTLCOLBL
             UTLSNDS  .SOUND,#1
             
 .ENDNOCOLISION
-            RTS
+            
+            
 *            MOVEM.L (A7)+,D0-D7/A0
+            RTS
 .SOUND      DC.L    'blocks.wav',0
-;---------------------------------------------------------------------------------
-UTLSCTRLP
+
+; -----------------------------------------------------------------------------
+UTLSCTRLP   
+; PLOTS THE SEPARATION BETWEEN THE GAME AND THE SCREEN CTRL
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
             MOVEM.L D0-D5/A1,-(A7)    
             ;DIBUJA LA BARRA DE SEPARACIÓN
-            MOVE.L  #$00FFFFFF,D1  ;COLOR
-            MOVE.B  #80,D0
-            TRAP    #15
-            
-            AND.L   #$00FFFFFF,D1  ;COLOR
-            MOVE.B  #81,D0
-            TRAP    #15
-            
+            UTLSPEN #$00FFFFFF
+            UTLSFIL #$00FFFFFF
             MOVE.B  #87,D0
             MOVE.W  #SCRCTRL,D1
             MOVE.W  #SCRCTRL+SCRLWIDTH,D3
@@ -457,6 +441,7 @@ UTLWRFILE
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1
             RTS
+
 
 
 

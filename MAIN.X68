@@ -1,6 +1,6 @@
 ; =============================================================================
-; TITLE    : EXAMPLE GAME
-; AUTHOR   :
+; TITLE    : BREAKING BLOCKS
+; AUTHOR   : ANDREA MOREY SANCHEZ Y AISHA GANDAROVA
 ; CREATION : 
 ; =============================================================================
 
@@ -10,21 +10,21 @@
           
             INCLUDE "SYSCONST.X68"          ; SYSTEM CONSTANTS
             INCLUDE "SYSTEM.X68"            ; SYSTEM CODE
-            INCLUDE "CONSTANTS.X68"         ;CONSTANTES DEL JUEGO
-            INCLUDE "UTIL.X68"
-            INCLUDE "PLAYER.X68"            ;EL JUGADOR
-            INCLUDE "STATES.X68"            ;
-            INCLUDE "BALL.X68"              ;LA PELOTA
-            INCLUDE "BLOCKS.X68"           ;BLOQUES
+            INCLUDE "CONSTANTS.X68"         ; USER CONSTANTS
+            INCLUDE "UTIL.X68"              ; UTILITY MACRO AND SUBROUTINES
+            INCLUDE "PLAYER.X68"            ; PLAYER MANAGEMENT
+            INCLUDE "STATES.X68"            ; GAME STATES MANAGEMENT
+            INCLUDE "BALL.X68"              ; BALL MANAGEMENT
+            INCLUDE "BLOCKS.X68"            ; BLOQUES
 
 ; --- INITIALIZE --------------------------------------------------------------
             
 START       JSR     SYSINIT
             ; TO DO: CALL GAME INITIALIZATION CODE HERE
-            JSR     STAINIT                 ;INICIA LAS PANTALLAS            
+            JSR     STAINIT                           
             
 ; --- UPDATE ------------------------------------------------------------------
-
+            
 .LOOP       TRAP    #KBDTRAP                ; READ KEYBOARD                 
                                             ; UPDATE DEPENDING ON THE STATE
             ; TO DO: CALL GAME UPDATE CODE HERE
@@ -51,13 +51,6 @@ START       JSR     SYSINIT
             INCLUDE "SYSVAR.X68"
             INCLUDE "VAR.X68"
             END    START
-
-
-
-
-
-
-
 *~Font name~Courier New~
 *~Font size~16~
 *~Tab type~0~

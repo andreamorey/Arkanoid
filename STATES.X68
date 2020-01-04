@@ -98,11 +98,11 @@ STAPLAYI    ;DEL NIVEL1, COMIENZO
 ; NOTE     - JUST A WRAPPER FOR PLRINIT
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D7/A0-A6,-(A7)
-            
             MOVE.W  #BINPOSX,BPOSX1
             MOVE.W  #BINPOSY,BPOSY2
             MOVE.W  #BINPOSX+BDIAMET,BPOSX2
             MOVE.W  #BINPOSY-BDIAMET,BPOSY1
+            
             MOVEM.L (A7)+,D0-D7/A0-A6
             RTS
 ; -----------------------------------------------------------------------------
@@ -164,7 +164,8 @@ STAINTRI                  ;VACIA LA MEMORIA DEL JUEGO
 
             JSR     UTLREADFILE
              ;GUARDA EL NOMBRE EN LA MEMORIA
-            
+            UTLSPEN #$00FFFFFF          ;COLOR
+            UTLLOCT 20,20           ;COLOCA
             UTLSVNAME
             
 
@@ -184,7 +185,9 @@ STAINTRU
             
             MOVE.W  #STASPACE,(STANEXT)
             UTLSNDST
+            JSR     PLRINIT
             JSR     BLINIT
+            JSR     BINIT
             MOVE.W  #PINLIVE,PLIVES
             CLR.W   PSCORE            
 .END        
@@ -266,6 +269,7 @@ STAGOVRP
             RTS
 .GOVSTR     DC.B    'GAME OVER',0
             DS.W    0
+
 
 
 
