@@ -92,7 +92,7 @@ BLUPD
             JSR     BNXTLEV
             JMP     .END
 .WON        
-            MOVE.W  #STAGOVR,STANEXT 
+            MOVE.W  #STAWIN,STANEXT 
 .END 
             MOVEM.L (A7)+,D0-D1
             RTS    
@@ -158,6 +158,8 @@ BLCOUNTBL
             MOVE.W  D3,BLCOUNTER
             MOVEM.L (A7)+,D0-D7/A2
             RTS
+
+
 
 
 *~Font name~Courier New~

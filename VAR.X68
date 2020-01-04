@@ -2,23 +2,20 @@
 ; GAME VARS
 ; =============================================================================
 
-; TO DO: DECLARE GAME VARIABLES HERE.
-
-; --- GAME STATE RELATED VARIABLES ------------------------------------------
+; --- GAME STATE RELATED VARIABLES --------------------------------------------
 
 STACUR      DS.W    1                       ; CURRENT GAME STATE
 STANEXT     DS.W    1                       ; NEXT GAME STATE
 ;----------------------------------------------------------------------------
 
-; PLAYER --------------------------------------------------------------------
+; -- PLAYER -------------------------------------------------------------------
 PPOSX       DS.W    1                       ;POSICION DE LA PLATAFORMA
 PWIDTH      DS.W    1                       ; PLAYER WIDTH (PIXELS)
 PLIVES      DS.W    1                       ;LIVES LEFT
 PSCORE      DS.W    1                       ;SCORE DEL PLAYER
 PSPEED      DS.W    1
 LEVEL       DS.B    2
-PNAME       DS.B    80                      ;NOMBRE CON CARACTERES MAX = 80
-            DS.W    0
+PNAME       DS.B    8                      ; NAME
 ;----------------------------------------------------------------------------
 
 ; BALL ----------------------------------------------------------------------
@@ -32,20 +29,14 @@ BPOSX1      DS.W    1
 BPOSX2      DS.W    1
 BPOSY1      DS.W    1
 BPOSY2      DS.W    1
-; BLOCKS --------------------------------------------------------------------
+; --- BLOCKS ------------------------------------------------------------------
 BLCOUNTER   DS.W    1
 BLMATRIX    DS.B    BLROW  ;12*8
             DS.W    0
-;ALL SCORES:
-ERRORFILE   DS.L    1
-POSRNK      DS.L    1
-RNKTABLE    DS.B    10
 
-BUFFER      DS.B    80
-            DS.W    0
-PLSIZE      DS.W    1
-
-
+; --- RANKING TABLE -----------------------------------------------------------
+POSRNK      DS.W    1                       ; NUMBER OF BYTES READ 
+RNKTABLE    DS.B    10                      ; RANKING TABLE
 
 
 

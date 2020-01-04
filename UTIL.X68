@@ -74,25 +74,41 @@ UTLSNDST     MACRO
             ENDM
 ; -----------------------------------------------------------------------------            
 UTLSVNAME  MACRO
-;SAVES THE NAME OS THE PLAYER
-;MAX CARACTERS: 20
+; WRAPPER FOR SAVING THE NAME OF THE PLAYER
+; MAX CARACTERS: 20
 ; -----------------------------------------------------------------------------
-            LEA.L   .INSTRUCT,A1            ;hacer que escriba
+            CLR.B   PNAME
+            LEA.L   .INSTRUCT,A1            
             MOVE.B  #14,D0
             TRAP    #15
-            
-            LEA.L   PNAME,A1                ;GUARDAMOS EL NOMBRE
+            LEA.L   PNAME,A1                ; SAVES IN PNAME
             MOVE.B  #2,D0
-            TRAP    #15                     ;(A1) = PNAME
-           
+            TRAP    #15
             RTS
-.INSTRUCT   DC.B    'ENTER YOUR NAME: ',0
+.INSTRUCT   DC.B    'ENTER YOUR NAME (MAX. 8 LETTERS): ',0
             ENDM
-            
 ; -----------------------------------------------------------------------------
 ; =============================================================================
 ; UTILITY SUBROUTINES
 ; =============================================================================
+; -----------------------------------------------------------------------------
+UTLINTRI
+; PLOTS THE TITLE OF THE GAME
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.L D0-D2/A1,-(A7)
+            ;TITULO
+            UTLLOCT INTTITX,INTTITY      
+            UTLSIZC #INTTITC,TXBSIZE
+            LEA     .TITSTR,A1            
+            MOVE.B  #14,D0
+            TRAP    #15
+            MOVEM.L (A7)+,D0-D2/A1
+            RTS
+.TITSTR     DC.B    'Breaking Blocks',0
+            DS.W    0
 ; -----------------------------------------------------------------------------
 UTLCHCOLW
 ; CHECKS COLLISION WITH WALL
@@ -129,17 +145,17 @@ UTLCHCOLW
             CMP.W   (A0)+,D3         
             BGT     .MINLIVE                  
             JMP     .END  
-.MINLIVE       
-            UTLSNDS .SOUNDL,#1
+.MINLIVE                                    ; MINUS ONE LIVE
+            UTLSNDS .SOUNDL,#1              
             MOVE.W  #SCRHEIGH,BPOSY2
             MOVE.W  #SCRHEIGH-BDIAMET,BPOSY1 
             SUB.W   #1,PLIVES                
             BNE     .RESET               
             UTLSNDST
             UTLSNDS .SOUNDG,#1
-            MOVE.W  #STAGOVR,(STANEXT)
+            MOVE.W  #STAGOVR,(STANEXT)      ; IF PLAYER LOST ALL THE LIVES
             JMP     .END
-.RESET     
+.RESET                                      
             MOVE.W  #STASPACE,(STANEXT) 
            
 .END        
@@ -155,10 +171,10 @@ UTLCHCOLP
 ;            D1.W BPOSY1
 ;            D2.W PPOSX2
 ;            D3.W PPOSY2
-; OUTPUT   
-; MODIFIES - D4,D5
+; OUTPUT   - NONE
+; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L D0-d3,-(A7)
+            MOVEM.L D0-D5,-(A7)
             MOVE.W  #PPOSY,D4
             CMP.W   D4,D3
             BLT     .END                    ;SI ESTÁ MÁS A ARRIBA DE LA PLATAFORMA NO HAY COLISIÓN
@@ -200,7 +216,7 @@ UTLCHCOLP
 .LADOS      
             NEG.W   BSPEEDX                 ;COLISIÓN CON LOS LADOS
 .END        
-            MOVEM.L (A7)+,D0-D3 
+            MOVEM.L (A7)+,D0-D5 
             RTS
 ; -----------------------------------------------------------------------------
 UTLCOLBL   
@@ -285,21 +301,18 @@ UTLCOLBL
             UTLSNDS  .SOUND,#1
             
 .ENDNOCOLISION
-            
-            
 *            MOVEM.L (A7)+,D0-D7/A0
             RTS
 .SOUND      DC.L    'blocks.wav',0
 
 ; -----------------------------------------------------------------------------
-UTLSCTRLP   
-; PLOTS THE SEPARATION BETWEEN THE GAME AND THE SCREEN CTRL
+UTLSREENP   
+; PLOTS THE SEPARATION BETWEEN THE GAME AND THE SCREENCTRL AND THE RNKTABLE
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D5/A1,-(A7)    
-            ;DIBUJA LA BARRA DE SEPARACIÓN
             UTLSPEN #$00FFFFFF
             UTLSFIL #$00FFFFFF
             MOVE.B  #87,D0
@@ -308,142 +321,157 @@ UTLSCTRLP
             CLR.L   D2
             MOVE.W  #SCRHEIGH,D4
             TRAP    #15
-            
-            ;SCORE
-            UTLLOCT PSCORETX,PSCORETY            
-            UTLSPEN #PSCORECOL          ;PENCOLOR Y TAMAÑO
-            UTLSFIL #$00000000
-            LEA     .TXTSCORE,A1              ;PONE EL TEXTO
-            MOVE.W  PSCORE,D1
-            MOVE.B  #17,D0
+            MOVE.B  #87,D0
+            MOVE.W  #SCRCTRL,D1
+            MOVE.W  #SCRWIDTH,D3
+            MOVE.W  #SCRRNKY,D2
+            MOVE.W  #SCRRNKY+5,D4
             TRAP    #15
-            
             MOVEM.L (A7)+,D0-D5/A1
             RTS   
 .TXTSCORE   DC.B    'SCORE: ',0
             DS.W    0
-
-;-----------------------------------------------------------------------------
+; -----------------------------------------------------------------------------
 UTLREADFILE  
+; READS THE FILE OF SCORE AND SAVES THE INFO IN RNKTABLE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
             MOVEM.L D0-D2/A1,-(A7)
-            MOVE.W  #50,D0                  ;CIERRA TODOS LOS FICHEROS
+            MOVE.W  #50,D0                  ; CLOSES ALL THE FILES
             TRAP    #15
             LEA.L   RNKTABLE,A1
-            MOVE.W  #100,D0
-.LOOP
-            CLR.B   (A1)+
-            DBRA    D0,.LOOP
             LEA     FILE,A1
             MOVE.B  #51,D0
-            TRAP    #15                     ;ABRE UN FICHERO EXISTENTE, D1 = FILE ID
-
-            
+            TRAP    #15                     ; OPENS A FILE D1 = FILE ID
             LEA.L   RNKTABLE,A1
-            MOVE.L  #100,D2                 ;BYTES QUE LEE
+            MOVE.L  #100,D2                 ; BYTES TO READ: 100
             MOVE.B  #53,D0
-            TRAP    #15                     ;LEE DEL FICHERO
-            CMP     #$64,D2
-            BNE     .SALTA
-            MOVE.L  #0,D2
-.SALTA
-            MOVE.L  D2,POSRNK
-            ;GUARDA EN EL BUFFER LO QUE HA LEIDO
+            TRAP    #15 
+            CMP.L   #$FFFFFFFF,(A1)         ; IF THE RNKTABLE IS EMPTY
+            BNE     .HAYALGO
+            MOVE.L  #0,D2    
+.HAYALGO
+            MOVE.W  D2,POSRNK
             MOVE.B  #56,D0
-            TRAP    #15                     ;CIERRA EL FICHERO
+            TRAP    #15                     ; CLOSE THE FILE
             MOVEM.L (A7)+,D0-D2/A1
             RTS
-;----------------------------------------------------------------------
-UTLREADRNK
-            MOVEM.L D0-D6/A1,-(A7)
-            ; D4 = EN QUE FILA ESTAMOS      
-            CLR.L   D4
-            
-            MOVE.W  #9,D5                   ;DBRA
-            
-            MOVE.L  POSRNK,D1
-            CMP     #$64,D1
-            BEQ     .END
-            MOVE.W  #20,D6
-          
+; -----------------------------------------------------------------------------
+UTLREADRNK  
+; READS THE RNKTABLE AND PLOTS THE SCORES WITH THE NAMES OF THE PLAYERS
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.L D0-D3/A1,-(A7)
+            UTLSPEN #$00FFFFFF
+            UTLSFIL #$00000000    
+            UTLLOCT RNKPSCC,RNKPOSR-2  
+            LEA     .TEXT,A1            
+            MOVE.B  #14,D0
+            TRAP    #15
+            MOVE.W  POSRNK,D3               
+            DIVU.W  #10,D3
+            SUBQ.W  #1,D3                   ; D3 = NUMBER OF ELEMENTS IN RNK
+            CMP     #0,D3                   
+            BLT     .END                    ; IF RNKTABLE IS EMPTY DON'T SHOW
+            MOVE.W  #RNKPOSR,D2             
+            LEA.L   RNKTABLE,A1 
 .LOOP
-            LEA.L   RNKTABLE,A1       1000   
-            MOVE.W  D4,D0                
-            MULU.W  #10,D0                  ;PARA LEER EL NOMBRE
-            
-            ADDA.L  D0,A1                   ;A0 = RNKTABLE + 10*FILA
-            
-            MOVE.W  #60<<8,D1
-            ADD.W   D6,D1
+            MOVE.W  #RNKPSCC<<8,D1          ; PLACE THE SCORE
+            ADD.W   D2,D1
             MOVE.B  #11,D0
             TRAP    #15
-            ;PRIMERO LEEMOS SCORE  (|SCORE|      NAME      |)
-            MOVE.B  #3,D0 
-            CLR.L   D1                  
-            MOVE.W  (A1),D1
-            TRAP    #15                     ;AQUI EN TEORIA VISUALIZA EL TEXTO, el score
-            ADDA.L  #2,A1                   ;PARA LEER EL NOMBRE (8B)
             
-            MOVE.W  #70<<8,D1
-            ADD.W   D6,D1
+            MOVE.B  #3,D0                    ; PLOTS THE SCORE
+            MOVE.W  (A1),D1                
+            TRAP    #15       
+              
+            ADDA.L  #2,A1 
+            MOVE.W  #RNKPNAC<<8,D1          ; PLACE THE NAME
+            ADD.W   D2,D1
             MOVE.B  #11,D0
             TRAP    #15    
-            ADDQ.W  #1,D6      
-            ;PRIMERO LEEMOS SCORE  (|SCORE|      NAME      |)
+            ADDQ.W  #1,D2                   ; NEXT ROW  
+            
             MOVE.B  #1,D0                   
-            MOVE.W  #8,D1                   ;8 BYTES QUE TIENE QUE IMPRIMIR
-            TRAP    #15                     ;AQUI EN TEORIA VISUALIZA EL TEXTO, el score
-          
-            ADD.L  #1,D4
-            DBRA    D5,.LOOP
+            MOVE.W  #8,D1                   ; PLOTS 8 BYTES = LETTERS
+            TRAP    #15     
+            
+            ADDA.L  #8,A1
+            DBRA    D3,.LOOP
 .END
-            MOVEM.L (A7)+,D0-D6/A1
+            MOVEM.L (A7)+,D0-D3/A1
             RTS
-
-;--------------------------------------------------------------------------------          
-UTLWRRNK    
-            MOVEM.L D0-D1/A0-A1,-(A7)
+.TEXT       DC.B    'RANKING TABLE:',0
+; -----------------------------------------------------------------------------
+UTLWRRNK 
+; ADDS THE PLAYER AT THE TOP OF THE TABLE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------         
+    
+            MOVEM.L D0-D1/A0-A2,-(A7)
             
             LEA.L   RNKTABLE,A1
-            MOVE.L  POSRNK,D1
-            ADDA.L  D1,A1
+            MOVE.W  POSRNK,D1
+            CMP.L   #$FFFFFFFF,(A1)         
+            BEQ     .LOAD                   ; IF THE MATRIX IS EMPTY
             
-.OCUPADO
-            ;A1 = TIENE LA PRIMERA POSICION DONDE ESCRIBE (LA MAS VIEJA)
+            ; MOVES ALL THE ELEMENTS AT THE RIGHT 
+            MOVE.L  A1,A0            
+            MOVE.L  A1,A2
+            ADDA.W  D1,A2
+            SUBA.W   #10,A2
+            ADDA.W  D1,A0                   
+            DIVU    #10,D1
+            SUBQ.W  #1,D1
+.LOOP                   
+            MOVE.W  #9,D0                   ; 10 COLUMNS
+.MOVER
+            MOVE.B  (A2)+,(A0)+             ; A2 = OLD POS, A0 = NEW POS 
+            DBRA    D0,.MOVER
+            SUBA.L  #20,A2
+            SUBA.L  #20,A0
+            DBRA    D1,.LOOP
+.LOAD                                       ; SAVES THE NAME AT ROW = 1
             MOVE.W  PSCORE,(A1)
             ADDA.L  #2,A1
-            MOVE.W  #7,D0
-            LEA.L   PNAME,A0
-.LOOP
+            MOVE.W  #7,D0                   ; NAME = 8 BYTES
+            LEA.L   PNAME,A0                 
+.NAME
             MOVE.B  (A0)+,(A1)+
-            DBRA    D0,.LOOP
-..          
-            MOVEM.L (A7)+,D0-D1/A0-A1
+            DBRA    D0,.NAME          
+            MOVEM.L (A7)+,D0-D1/A0-A2
             RTS
-;--------------------------------------------------------------------------------- 
-UTLWRFILE
+; -----------------------------------------------------------------------------
+UTLWRFILE 
+; SAVES THE RNKTABLE IN THE FILE
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - score.txt 
+; -----------------------------------------------------------------------------
             MOVEM.L D0-D2/A1,-(A7)
-            MOVE.B  #50,D0  ;CERRAMOS TODOS LOS FICHERO
+            MOVE.B  #50,D0                  ; CLOSES ALL THE FILES
             TRAP    #15
-            
-            LEA.L   FILE,A1                 ;ABRE NUESTRO FICHERO
+            LEA.L   FILE,A1                 ; OPEN FILE
             MOVE.B  #51,D0                  
-            TRAP    #15                     ;DEVUELVE EL ID DE FICHERO EN D1
+            TRAP    #15                     ; D1 = FILE ID
             
-            LEA.L   RNKTABLE,A1                ;escribimos en el fichero 
-            ;D1 YA TINENE EL ID DEL FICHERO
-            MOVE.L  POSRNK,D2  
-            ADD.W   #10,D2         
-            ;ADD.W   #1,D2                   ;PARA EL CARACTER NULL
-            MOVE.B  #54,D0
+            CLR.L   D2
+            LEA.L   RNKTABLE,A1             
+            MOVE.W  POSRNK,D2  
+            ADD.W   #10,D2                  
+            MOVE.B  #54,D0                  ; WRITES THE PLAYER IN THE FILE 
             TRAP    #15
            
-            MOVE.B  #56,D0                  ;cerramos fichero
+            MOVE.B  #56,D0                  ; CLOSE THE FILE
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1
             RTS
-
-
-
 
 
 *~Font name~Courier New~

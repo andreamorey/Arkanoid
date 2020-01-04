@@ -84,7 +84,7 @@ PPLOT
             ;PLOT LIFE
             MOVE.W  PLIVES,D5
             BEQ     .END
-            UTLSPEN #LIVECOLOR 
+            UTLSPEN #0 
             UTLSFIL #LIVECOLOR
             SUB.W   #1,D5             
             MOVE.B  #87,D0
@@ -115,6 +115,14 @@ PPLOT
             MOVE.W  LEVEL,D1
             MOVE.B  #17,D0
             TRAP    #15
+            
+            ;PLOT NAME
+            UTLLOCT PSCORETX,PSCORETY+4  
+            UTLSFIL #$00000000
+            LEA     PNAME,A1 
+            MOVE.B  #14,D0
+            TRAP    #15
+
 .END            
             MOVEM.L (A7)+,D0-D5/A1
             RTS
@@ -122,6 +130,7 @@ PPLOT
 .TXTSCORE   DC.B    'SCORE: ',0
 .TXTLEVEL   DC.B    'LEVEL: ',0
             DS.W    0
+
 *~Font name~Courier New~
 *~Font size~16~
 *~Tab type~0~

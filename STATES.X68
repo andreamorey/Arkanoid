@@ -9,11 +9,9 @@ STAINIT
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVE.W  #STANONE,(STACUR)       ;STACUR = -1 
-           ; TENEMOS QUE SABER SI -1 = CAMBIO O SE QUEDA EN EL MISMO
-            MOVE.W  #STAINTR,(STANEXT)      ;STAINTR = LA PANTALLA INTRO = 0
+            MOVE.W  #STANONE,STACUR  
+            MOVE.W  #STAINTR,STANEXT  
             RTS
-
 ; -----------------------------------------------------------------------------
 STAUPD
 ; PERFORMS STATE UPDATE AND INIT IF NECESSARY
@@ -23,31 +21,26 @@ STAUPD
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
             CLR.L   D0
-            MOVE.W  (STANEXT),D0
+            MOVE.W  STANEXT,D0
             CMP.W   (STACUR),D0
             BEQ     .DOUPD
             
-            MOVE.W  D0,(STACUR)             ;AHORA ES LA PANTALLA DE INTRO
+            MOVE.W  D0,STACUR 
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .INITBL(A0),A0
             
             JSR     (A0)
 .DOUPD      CLR.L   D0                      ; IN ANY CASE, DO UPDATE
-            MOVE.W  (STACUR),D0
+            MOVE.W  STACUR,D0
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .UPDTBL(A0),A0
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTYP,STAEMPTYG ;EL 0 ES VACIAR LA MEMORIA DEL JUEGO
-                                             ;EL 1 ES LO QUE INICIA EL JUEGO = PINIT
-                                             ;EL 2 ES NO HACER NADA 
-.UPDTBL     DC.L    STAINTRU,STASPACEU,STAPLAYU,STAGOVRU
-                                            ;EL 0 ES SI SE PULSA ESPACIO CAMBIAR EL STANEXT A PLAY
-                                            ;EL 2 HACE QUE SE UPDATE 
-
+.INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTY,STASAVEI,STASAVEI 
+.UPDTBL     DC.L    STAINTRU,STASPACEU,STAPLAYU,STAFINU,STAFINU
 ; -----------------------------------------------------------------------------
 STAPLOT
 ; PERFORMS STATE PLOT
@@ -57,18 +50,18 @@ STAPLOT
 ; -----------------------------------------------------------------------------
             MOVEM.L D0/A0,-(A7)
             CLR.L   D0
-            MOVE.W  (STACUR),D0
+            MOVE.W  STANEXT,D0
             LSL.L   #2,D0
             MOVE.L  D0,A0
-            MOVE.L  .PLTTBL(A0),A0          ;ELIGE QUE HACER
+            MOVE.L  .PLTTBL(A0),A0         
             JSR     (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-.PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPLAYP,STAGOVRP
-                           ;SPACE      NIVEL1   NIVEL2    NIVEL3   
+.PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPLAYP,STAGOVRP,STAWINP
+                           ;SPACE        
 
 ; -----------------------------------------------------------------------------
-STAEMPTYP
+STAEMPTY
 ; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
 ; INPUT    - NONE
 ; OUTPUT   - NONE
@@ -77,8 +70,8 @@ STAEMPTYP
 ; -----------------------------------------------------------------------------
             RTS
 ; -----------------------------------------------------------------------------
-STAEMPTYG
-; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
+STASAVEI
+; SAVES THE INFORMATION OF THE PLAYER
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
@@ -87,7 +80,6 @@ STAEMPTYG
             JSR     UTLWRRNK                ;ESCRIBE EN EL TABLE
             JSR     UTLWRFILE               ;ESCRIBIMOS EN EL FICHERO
             RTS
-
 ; -----------------------------------------------------------------------------
 STAPLAYI    ;DEL NIVEL1, COMIENZO
 
@@ -115,11 +107,9 @@ STASPACEU
             MOVE.W  #PINPOSX1,PPOSX
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
-            MOVE.W  #STAPLAY,(STANEXT)
+            MOVE.W  #STAPLAY,STANEXT
 .END        
             RTS
-                             
-
 ; -----------------------------------------------------------------------------
 STAPLAYU
 ; PLAY STATE UPDATE
@@ -141,36 +131,32 @@ STAPLAYP
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D7/A0-A6,-(A7)
-            JSR     UTLREADRNK
+            JSR     BPLOT
             JSR     BLPLOT
             JSR     PPLOT
-            JSR     BPLOT
-            JSR     UTLSCTRLP
+            JSR     UTLSREENP
+            JSR     UTLREADRNK
             MOVEM.L (A7)+,D0-D7/A0-A6 
             RTS
-
 ; -----------------------------------------------------------------------------
-STAINTRI                  ;VACIA LA MEMORIA DEL JUEGO
+STAINTRI   
 ; PARA QUE EL SCORE LA VIDA SE VUELVAN A REINICIAR
 
 ; INTRO STATE INIT
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
-; NOTE     - JUST A WRAPPER FOR DMMINIT TO RELEASE ALL MEMORY
 ; -----------------------------------------------------------------------------
-              ;LEE TODOS LOS DATOS DEL FICHERO Y LO GUARDA EN LA TABLA
             JSR     DMMINIT
-
             JSR     UTLREADFILE
-             ;GUARDA EL NOMBRE EN LA MEMORIA
-            UTLSPEN #$00FFFFFF          ;COLOR
-            UTLLOCT 20,20           ;COLOCA
+            JSR     UTLINTRI
+            UTLSNDS .SOUND,#1
+            UTLSIZC #INTPRSC,TXSSIZE
+            UTLLOCT 18,25  
             UTLSVNAME
-            
-
-            
             RTS
+.SOUND      DC.L    'start largo.wav',0
+
 ; -----------------------------------------------------------------------------
 STAINTRU
 ; INTRO STATE UPDATE
@@ -182,8 +168,7 @@ STAINTRU
             UTLSNDS .SOUND,#1
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
-            
-            MOVE.W  #STASPACE,(STANEXT)
+            MOVE.W  #STASPACE,STANEXT
             UTLSNDST
             JSR     PLRINIT
             JSR     BLINIT
@@ -202,45 +187,27 @@ STAINTRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
+           JSR      UTLINTRI
             MOVEM.L D0-D2/A1,-(A7)
-            ;TITULO
-            UTLLOCT INTTITX,INTTITY      
-            UTLSIZC #INTTITC,TXBSIZE
-            LEA     .TITSTR,A1            
-            MOVE.B  #14,D0
-            TRAP    #15
-            
             ;START
             UTLLOCT INTPRSX,INTPRSY
             UTLSIZC #INTPRSC,TXSSIZE
             LEA     .PRSSTR,A1
             MOVE.B  #14,D0
             TRAP    #15
-            
-*            UTLSNDS .SOUND,#1
-            
             MOVEM.L (A7)+,D0-D2/A1
             RTS
-*.SOUND      DC.L    'start largo.wav',0
-.TITSTR     DC.B    'Breaking Blocks',0
 .PRSSTR     DC.B    'PUSH FIRE TO START',0
             DS.W    0
+           
 ; -----------------------------------------------------------------------------
-STAGOVRU
+STAFINU
 ; GAME OVER STATE UPDATE
 ; INPUT    - NONE
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
             ;visualiza el fichero
-            UTLSPEN #$00FFFFFF
-            UTLSFIL #$00000000
-*            LEA.L   PNAME,A1
-*            MOVE.W  #LIVEPOSX,D1
-*            MOVE.W  #200,D2
-*            MOVE.B  #95,D0                   ;IMPRIME LA LINEA EN A1
-*            TRAP    #15
-            
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
             UTLSNDST
@@ -269,18 +236,25 @@ STAGOVRP
             RTS
 .GOVSTR     DC.B    'GAME OVER',0
             DS.W    0
-
-
-
-
-
-
-
-
-
-
-
-
+            
+; -----------------------------------------------------------------------------
+STAWINP
+; WIN STATE PLOT
+; INPUT    - NONE
+; OUTPUT   - NONE
+; MODIFIES - NONE
+; -----------------------------------------------------------------------------
+            MOVEM.L D0-D2/A1,-(A7)
+            ;TITULO
+            UTLLOCT INTTITX,INTTITY      
+            UTLSIZC #INTTITC,TXBSIZE
+            LEA     .TITSTR,A1            
+            MOVE.B  #14,D0
+            TRAP    #15
+            MOVEM.L (A7)+,D0-D2/A1
+            RTS
+.TITSTR     DC.B    'YOU WON',0
+            DS.W    0
 
 
 
