@@ -77,7 +77,40 @@ STASAVEI
 ; MODIFIES - NONE
 ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
 ; -----------------------------------------------------------------------------
-            JSR     UTLWRRNK                ;ESCRIBE EN EL TABLE
+            MOVEM.L D0-D1/A0-A2,-(A7)
+            
+            LEA.L   RNKTABLE,A1
+            MOVE.W  POSRNK,D1
+            CMP.L   #$FFFFFFFF,(A1)         
+            BEQ     .LOAD                   ; IF THE MATRIX IS EMPTY
+            
+            ; MOVES ALL THE ELEMENTS AT THE RIGHT 
+            MOVE.L  A1,A0            
+            MOVE.L  A1,A2
+            ADDA.W  D1,A2
+            SUBA.W   #10,A2
+            ADDA.W  D1,A0                   
+            DIVU    #10,D1
+            SUBQ.W  #1,D1
+.LOOP                   
+            MOVE.W  #9,D0                   ; 10 COLUMNS
+.MOVER
+            MOVE.B  (A2)+,(A0)+             ; A2 = OLD POS, A0 = NEW POS 
+            DBRA    D0,.MOVER
+            SUBA.L  #20,A2
+            SUBA.L  #20,A0
+            DBRA    D1,.LOOP
+.LOAD                                       ; SAVES THE NAME AT ROW = 1
+            MOVE.W  PSCORE,(A1)
+            ADDA.L  #2,A1
+            MOVE.W  #7,D0                   ; NAME = 8 BYTES
+            LEA.L   PNAME,A0                 
+.NAME
+            MOVE.B  (A0)+,(A1)+
+            DBRA    D0,.NAME          
+            MOVEM.L (A7)+,D0-D1/A0-A2
+        
+
             JSR     UTLWRFILE               ;ESCRIBIMOS EN EL FICHERO
             RTS
 ; -----------------------------------------------------------------------------
@@ -255,6 +288,7 @@ STAWINP
             RTS
 .TITSTR     DC.B    'YOU WON',0
             DS.W    0
+
 
 
 
