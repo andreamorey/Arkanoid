@@ -1,6 +1,6 @@
-00001D64 Starting Address
+00001ED4 Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 03/01/2020 14:33:13
+Created On: 06/01/2020 0:36:37
 
 00000000                             1  ; =============================================================================
 00000000                             2  ; GAME STATE MANAGEMENT
@@ -14,360 +14,422 @@ Created On: 03/01/2020 14:33:13
 00000000                            10  ; MODIFIES - NONE
 00000000                            11  ; -----------------------------------------------------------------------------
 Line 12 ERROR: Undefined symbol
-00000000  33FC BD16 005455C4        12              MOVE.W  #STANONE,(STACUR)       ;STACUR = -1 
-00000008                            13             ; TENEMOS QUE SABER SI -1 = CAMBIO O SE QUEDA EN EL MISMO
-Line 14 ERROR: Undefined symbol
-00000008  33FC BD16 005455D4        14              MOVE.W  #STAINTR,(STANEXT)      ;STAINTR = LA PANTALLA INTRO = 0
-00000010  4E75                      15              RTS
-00000012                            16  
-00000012                            17  ; -----------------------------------------------------------------------------
-00000012                            18  STAUPD
-00000012                            19  ; PERFORMS STATE UPDATE AND INIT IF NECESSARY
-00000012                            20  ; INPUT    - NONE
-00000012                            21  ; OUTPUT   - NONE
-00000012                            22  ; MODIFIES - NONE
-00000012                            23  ; -----------------------------------------------------------------------------
-00000012  48E7 8080                 24              MOVEM.L D0/A0,-(A7)
-00000016  4280                      25              CLR.L   D0
-Line 26 ERROR: Undefined symbol
-00000018  3039 004DBD16             26              MOVE.W  (STANEXT),D0
+00000000  33FC BD16 005455B8        12              MOVE.W  #STANONE,STACUR  
+Line 13 ERROR: Undefined symbol
+00000008  33FC BD16 005455B8        13              MOVE.W  #STAINTR,STANEXT  
+00000010  4E75                      14              RTS
+00000012                            15  ; -----------------------------------------------------------------------------
+00000012                            16  STAUPD
+00000012                            17  ; PERFORMS STATE UPDATE AND INIT IF NECESSARY
+00000012                            18  ; INPUT    - NONE
+00000012                            19  ; OUTPUT   - NONE
+00000012                            20  ; MODIFIES - NONE
+00000012                            21  ; -----------------------------------------------------------------------------
+00000012  48E7 8080                 22              MOVEM.L D0/A0,-(A7)
+00000016  4280                      23              CLR.L   D0
+Line 24 ERROR: Undefined symbol
+00000018  3039 004DBD16             24              MOVE.W  STANEXT,D0
+Line 25 ERROR: Undefined symbol
+0000001E  B079 004DBD16             25              CMP.W   (STACUR),D0
+00000024  6700 0012                 26              BEQ     .DOUPD
 Line 27 ERROR: Undefined symbol
-0000001E  B079 004DBD16             27              CMP.W   (STACUR),D0
-00000024  6700 0012                 28              BEQ     .DOUPD
-Line 29 ERROR: Undefined symbol
-00000028  33C0 005455D0             29              MOVE.W  D0,(STACUR)             ;AHORA ES LA PANTALLA DE INTRO
-0000002E  E588                      30              LSL.L   #2,D0
-00000030  2040                      31              MOVE.L  D0,A0
-00000032  2068 0050                 32              MOVE.L  .INITBL(A0),A0
-00000036  4E90                      33              JSR     (A0)
-00000038  4280                      34  .DOUPD      CLR.L   D0                      ; IN ANY CASE, DO UPDATE
-Line 35 ERROR: Undefined symbol
-0000003A  3039 004DBD16             35              MOVE.W  (STACUR),D0
-00000040  E588                      36              LSL.L   #2,D0
-00000042  2040                      37              MOVE.L  D0,A0
-00000044  2068 0060                 38              MOVE.L  .UPDTBL(A0),A0
-00000048  4E90                      39              JSR     (A0)
-0000004A  4CDF 0101                 40              MOVEM.L (A7)+,D0/A0
-0000004E  4E75                      41              RTS
-00000050= 00000138 000000AC ...     42  .INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTYP,STAEMPTYG ;EL 0 ES VACIAR LA MEMORIA DEL JUEGO
-00000060                            43                                               ;EL 1 ES LO QUE INICIA EL JUEGO = PINIT
-00000060                            44                                               ;EL 2 ES NO HACER NADA 
-00000060= 00000146 000000D6 ...     45  .UPDTBL     DC.L    STAINTRU,STASPACEU,STAPLAYU,STAGOVRU
-00000070                            46                                              ;EL 0 ES SI SE PULSA ESPACIO CAMBIAR EL STANEXT A PLAY
-00000070                            47                                              ;EL 2 HACE QUE SE UPDATE 
-00000070                            48  
-00000070                            49  ; -----------------------------------------------------------------------------
-00000070                            50  STAPLOT
-00000070                            51  ; PERFORMS STATE PLOT
-00000070                            52  ; INPUT    - NONE
-00000070                            53  ; OUTPUT   - NONE
-00000070                            54  ; MODIFIES - NONE
-00000070                            55  ; -----------------------------------------------------------------------------
-00000070  48E7 8080                 56              MOVEM.L D0/A0,-(A7)
-00000074  4280                      57              CLR.L   D0
-Line 58 ERROR: Undefined symbol
-00000076  3039 004DBD16             58              MOVE.W  (STACUR),D0
-0000007C  E588                      59              LSL.L   #2,D0
-0000007E  2040                      60              MOVE.L  D0,A0
-00000080  2068 008C                 61              MOVE.L  .PLTTBL(A0),A0          ;ELIGE QUE HACER
-00000084  4E90                      62              JSR     (A0)
-00000086  4CDF 0101                 63              MOVEM.L (A7)+,D0/A0
-0000008A  4E75                      64              RTS
-0000008C= 00000178 00000110 ...     65  .PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPLAYP,STAGOVRP
-0000009C                            66                             ;SPACE      NIVEL1   NIVEL2    NIVEL3   
-0000009C                            67  
-0000009C                            68  ; -----------------------------------------------------------------------------
-0000009C                            69  STAEMPTYP
-0000009C                            70  ; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
-0000009C                            71  ; INPUT    - NONE
-0000009C                            72  ; OUTPUT   - NONE
-0000009C                            73  ; MODIFIES - NONE
-0000009C                            74  ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
-0000009C                            75  ; -----------------------------------------------------------------------------
-0000009C  4E75                      76              RTS
-0000009E                            77  ; -----------------------------------------------------------------------------
-0000009E                            78  STAEMPTYG
-0000009E                            79  ; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
-0000009E                            80  ; INPUT    - NONE
-0000009E                            81  ; OUTPUT   - NONE
-0000009E                            82  ; MODIFIES - NONE
-0000009E                            83  ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
-0000009E                            84  ; -----------------------------------------------------------------------------
-Line 85 ERROR: Undefined symbol
-0000009E  4EB9 004DBD16             85              JSR     UTLWRRNK                ;ESCRIBE EN EL TABLE
-Line 86 ERROR: Undefined symbol
-000000A4  4EB9 004DBD16             86              JSR     UTLWRFILE               ;ESCRIBIMOS EN EL FICHERO
-000000AA  4E75                      87              RTS
-000000AC                            88  
-000000AC                            89  ; -----------------------------------------------------------------------------
-000000AC                            90  STAPLAYI    ;DEL NIVEL1, COMIENZO
-000000AC                            91  
-000000AC                            92  ; PLAY STATE INITIALIZATION.
-000000AC                            93  ; INPUT    - NONE
-000000AC                            94  ; OUTPUT   - NONE
-000000AC                            95  ; MODIFIES - NONE
-000000AC                            96  ; NOTE     - JUST A WRAPPER FOR PLRINIT
-000000AC                            97  ; -----------------------------------------------------------------------------
-000000AC  48E7 FFFE                 98              MOVEM.L D0-D7/A0-A6,-(A7)
-Line 99 ERROR: Invalid opcode
-000000B0                            99              UTLSNDST
+00000028  33C0 005455B8             27              MOVE.W  D0,STACUR 
+0000002E  E588                      28              LSL.L   #2,D0
+00000030  2040                      29              MOVE.L  D0,A0
+00000032  2068 0050                 30              MOVE.L  .INITBL(A0),A0
+00000036  4E90                      31              JSR     (A0)
+00000038  4280                      32  .DOUPD      CLR.L   D0                      ; IN ANY CASE, DO UPDATE
+Line 33 ERROR: Undefined symbol
+0000003A  3039 004DBD16             33              MOVE.W  STACUR,D0
+00000040  E588                      34              LSL.L   #2,D0
+00000042  2040                      35              MOVE.L  D0,A0
+00000044  2068 0064                 36              MOVE.L  .UPDTBL(A0),A0
+00000048  4E90                      37              JSR     (A0)
+0000004A  4CDF 0101                 38              MOVEM.L (A7)+,D0/A0
+0000004E  4E75                      39              RTS
+00000050= 000001A0 00000114 ...     40  .INITBL     DC.L    STAINTRI,STAPLAYI,STAEMPTY,STASAVEI,STASAVEI 
+00000064= 000001C8 0000013E ...     41  .UPDTBL     DC.L    STAINTRU,STASPACEU,STAPLAYU,STAFINU,STAFINU
+00000078                            42  ; -----------------------------------------------------------------------------
+00000078                            43  STAPLOT
+00000078                            44  ; PERFORMS STATE PLOT
+00000078                            45  ; INPUT    - NONE
+00000078                            46  ; OUTPUT   - NONE
+00000078                            47  ; MODIFIES - NONE
+00000078                            48  ; -----------------------------------------------------------------------------
+00000078  48E7 8080                 49              MOVEM.L D0/A0,-(A7)
+0000007C  4280                      50              CLR.L   D0
+Line 51 ERROR: Undefined symbol
+0000007E  3039 004DBD16             51              MOVE.W  STANEXT,D0
+00000084  E588                      52              LSL.L   #2,D0
+00000086  2040                      53              MOVE.L  D0,A0
+00000088  2068 0094                 54              MOVE.L  .PLTTBL(A0),A0         
+0000008C  4E90                      55              JSR     (A0)
+0000008E  4CDF 0101                 56              MOVEM.L (A7)+,D0/A0
+00000092  4E75                      57              RTS
+00000094= 0000025E 00000178 ...     58  .PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPLAYP,STAGOVRP,STAWINP
+000000A8                            59  ; -----------------------------------------------------------------------------
+000000A8                            60  STAEMPTY
+000000A8                            61  ; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
+000000A8                            62  ; INPUT    - NONE
+000000A8                            63  ; OUTPUT   - NONE
+000000A8                            64  ; MODIFIES - NONE
+000000A8                            65  ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
+000000A8                            66  ; -----------------------------------------------------------------------------
+000000A8  4E75                      67              RTS
+000000AA                            68  ; -----------------------------------------------------------------------------
+000000AA                            69  STASAVEI
+000000AA                            70  ; SAVES THE INFORMATION OF THE PLAYER
+000000AA                            71  ; INPUT    - NONE
+000000AA                            72  ; OUTPUT   - NONE
+000000AA                            73  ; MODIFIES - NONE
+000000AA                            74  ; NOTE     - JUST A PLACEHOLDER. NOTHING TO DO.
+000000AA                            75  ; -----------------------------------------------------------------------------
+000000AA  48E7 C0E0                 76              MOVEM.L D0-D1/A0-A2,-(A7)
+000000AE                            77              
+Line 78 ERROR: Undefined symbol
+000000AE  43F9 004DBD16             78              LEA.L   RNKTABLE,A1
+Line 79 ERROR: Undefined symbol
+000000B4  3239 004DBD16             79              MOVE.W  POSRNK,D1
+000000BA  0C91 FFFFFFFF             80              CMP.L   #$FFFFFFFF,(A1)         
+000000C0  6700 002E                 81              BEQ     .LOAD                   ; IF THE MATRIX IS EMPTY
+000000C4                            82              
+000000C4                            83              ; MOVES ALL THE ELEMENTS AT THE RIGHT 
+000000C4  2049                      84              MOVE.L  A1,A0            
+000000C6  2449                      85              MOVE.L  A1,A2
+000000C8  D4C1                      86              ADDA.W  D1,A2
+000000CA  94FC 000A                 87              SUBA.W   #10,A2
+000000CE  D0C1                      88              ADDA.W  D1,A0                   
+000000D0  82FC 000A                 89              DIVU    #10,D1
+000000D4  5341                      90              SUBQ.W  #1,D1
+000000D6                            91  .LOOP                   
+000000D6  303C 0009                 92              MOVE.W  #9,D0                   ; 10 COLUMNS
+000000DA                            93  .MOVER
+000000DA  10DA                      94              MOVE.B  (A2)+,(A0)+             ; A2 = OLD POS, A0 = NEW POS 
+000000DC  51C8 FFFC                 95              DBRA    D0,.MOVER
+000000E0  95FC 00000014             96              SUBA.L  #20,A2
+000000E6  91FC 00000014             97              SUBA.L  #20,A0
+000000EC  51C9 FFE8                 98              DBRA    D1,.LOOP
+000000F0                            99  .LOAD                                       ; SAVES THE NAME AT ROW = 1
 Line 100 ERROR: Undefined symbol
-000000B0  33FC BD16 005455B8       100              MOVE.W  #BINPOSX,BPOSX1
-Line 101 ERROR: Undefined symbol
-000000B8  33FC BD16 005455B8       101              MOVE.W  #BINPOSY,BPOSY2
-Line 102 ERROR: Invalid syntax
-000000C0                           102              MOVE.W  #BINPOSX+BDIAMET,BPOSX2
-Line 103 ERROR: Comma expected
-000000C0                           103              MOVE.W  #BINPOSY-BDIAMET,BPOSY1
-000000C0  4CDF 7FFF                104              MOVEM.L (A7)+,D0-D7/A0-A6
-000000C4  4E75                     105              RTS
-000000C6                           106  ; -----------------------------------------------------------------------------
-Line 107 ERROR: Symbol value differs between first and second pass
-000000C6                           107  STASPACEU
-000000C6                           108  ; WAITS FOR SPACE TO BE PRESSED, AND BEGIN THE GAME
-000000C6                           109  ; INPUT    - NONE
-000000C6                           110  ; OUTPUT   - NONE
-000000C6                           111  ; MODIFIES - NONE
-000000C6                           112  ; -----------------------------------------------------------------------------
-Line 113 ERROR: Undefined symbol
-000000C6  33FC BD16 005455B8       113              MOVE.W  #PINPOSX1,PPOSX
-Line 114 ERROR: Undefined symbol
-000000CE  0839 0016 005455B8       114              BTST.B  #KBDBITF1,(KBDEDGE)
-000000D6  6700 001A                115              BEQ     .END
-Line 116 ERROR: Undefined symbol
-000000DA  33FC BD16 005455B8       116              MOVE.W  #STAPLAY,(STANEXT)
-Line 117 ERROR: Symbol value differs between first and second pass
-000000E2                           117  .END        
-000000E2  4E75                     118              RTS
-000000E4                           119                               
-000000E4                           120  
-000000E4                           121  ; -----------------------------------------------------------------------------
-Line 122 ERROR: Symbol value differs between first and second pass
-000000E4                           122  STAPLAYU
-000000E4                           123  ; PLAY STATE UPDATE
-000000E4                           124  ; INPUT    - NONE
-000000E4                           125  ; OUTPUT   - NONE
-000000E4                           126  ; MODIFIES - NONE
-000000E4                           127  ; -----------------------------------------------------------------------------
-000000E4  48E7 FFFE                128              MOVEM.L D0-D7/A0-A6,-(A7)
-Line 129 ERROR: Undefined symbol
-000000E8  4EB9 004DBD16            129              JSR     PLRUPD
-Line 130 ERROR: Undefined symbol
-000000EE  4EB9 004DBD16            130              JSR     BUPD    
-Line 131 ERROR: Undefined symbol
-000000F4  4EB9 004DBD16            131              JSR     BLUPD
-000000FA  4CDF 7FFF                132              MOVEM.L (A7)+,D0-D7/A0-A6          
-000000FE  4E75                     133              RTS
-00000100                           134  ; -----------------------------------------------------------------------------
-Line 135 ERROR: Symbol value differs between first and second pass
-00000100                           135  STAPLAYP
-00000100                           136  ; PLAY STATE PLOT
-00000100                           137  ; INPUT    - NONE
-00000100                           138  ; OUTPUT   - NONE
-00000100                           139  ; MODIFIES - NONE
-00000100                           140  ; -----------------------------------------------------------------------------
-00000100  48E7 FFFE                141              MOVEM.L D0-D7/A0-A6,-(A7)
-Line 142 ERROR: Undefined symbol
-00000104  4EB9 004DBD16            142              JSR     UTLREADRNK
-Line 143 ERROR: Undefined symbol
-0000010A  4EB9 004DBD16            143              JSR     BLPLOT
-Line 144 ERROR: Undefined symbol
-00000110  4EB9 004DBD16            144              JSR     PPLOT
-Line 145 ERROR: Undefined symbol
-00000116  4EB9 004DBD16            145              JSR     BPLOT
-Line 146 ERROR: Undefined symbol
-0000011C  4EB9 004DBD16            146              JSR     UTLSCTRLP
-00000122  4CDF 7FFF                147              MOVEM.L (A7)+,D0-D7/A0-A6 
-00000126  4E75                     148              RTS
-00000128                           149  
-00000128                           150  ; -----------------------------------------------------------------------------
-Line 151 ERROR: Symbol value differs between first and second pass
-00000128                           151  STAINTRI                  ;VACIA LA MEMORIA DEL JUEGO
-00000128                           152  ; PARA QUE EL SCORE LA VIDA SE VUELVAN A REINICIAR
-00000128                           153  
-00000128                           154  ; INTRO STATE INIT
-00000128                           155  ; INPUT    - NONE
-00000128                           156  ; OUTPUT   - NONE
-00000128                           157  ; MODIFIES - NONE
-00000128                           158  ; NOTE     - JUST A WRAPPER FOR DMMINIT TO RELEASE ALL MEMORY
-00000128                           159  ; -----------------------------------------------------------------------------
-00000128                           160                ;LEE TODOS LOS DATOS DEL FICHERO Y LO GUARDA EN LA TABLA
-Line 161 ERROR: Undefined symbol
-00000128  4EB9 004DBD16            161              JSR     UTLREADFILE
-0000012E                           162               ;GUARDA EL NOMBRE EN LA MEMORIA
-Line 163 ERROR: Invalid opcode
-0000012E                           163              UTLSVNAME
+000000F0  32B9 004DBD16            100              MOVE.W  PSCORE,(A1)
+000000F6  5489                     101              ADDA.L  #2,A1
+000000F8  303C 0007                102              MOVE.W  #7,D0                   ; NAME = 8 BYTES
+Line 103 ERROR: Undefined symbol
+000000FC  41F9 004DBD16            103              LEA.L   PNAME,A0                 
+00000102                           104  .NAME
+00000102  12D8                     105              MOVE.B  (A0)+,(A1)+
+00000104  51C8 FFFC                106              DBRA    D0,.NAME          
+00000108  4CDF 0703                107              MOVEM.L (A7)+,D0-D1/A0-A2
+0000010C                           108          
+0000010C                           109  
+Line 110 ERROR: Undefined symbol
+0000010C  4EB9 004DBD16            110              JSR     UTLWRFILE               ;ESCRIBIMOS EN EL FICHERO
+00000112  4E75                     111              RTS
+00000114                           112  ; -----------------------------------------------------------------------------
+00000114                           113  STAPLAYI    ;DEL NIVEL1, COMIENZO
+00000114                           114  
+00000114                           115  ; PLAY STATE INITIALIZATION
+00000114                           116  ; INPUT    - NONE
+00000114                           117  ; OUTPUT   - NONE
+00000114                           118  ; MODIFIES - NONE
+00000114                           119  ; NOTE     - JUST A WRAPPER FOR PLRINIT
+00000114                           120  ; -----------------------------------------------------------------------------
+00000114  48E7 FFFE                121              MOVEM.L D0-D7/A0-A6,-(A7)
+Line 122 ERROR: Undefined symbol
+00000118  33FC BD16 005455B8       122              MOVE.W  #BINPOSX,BPOSX1
+Line 123 ERROR: Undefined symbol
+00000120  33FC BD16 005455B8       123              MOVE.W  #BINPOSY,BPOSY2
+Line 124 ERROR: Invalid syntax
+00000128                           124              MOVE.W  #BINPOSX+BDIAMET,BPOSX2
+Line 125 ERROR: Comma expected
+00000128                           125              MOVE.W  #BINPOSY-BDIAMET,BPOSY1
+00000128                           126              
+00000128  4CDF 7FFF                127              MOVEM.L (A7)+,D0-D7/A0-A6
+0000012C  4E75                     128              RTS
+0000012E                           129  ; -----------------------------------------------------------------------------
+Line 130 ERROR: Symbol value differs between first and second pass
+0000012E                           130  STASPACEU
+0000012E                           131  ; WAITS FOR SPACE TO BE PRESSED, AND BEGIN THE GAME
+0000012E                           132  ; INPUT    - NONE
+0000012E                           133  ; OUTPUT   - NONE
+0000012E                           134  ; MODIFIES - NONE
+0000012E                           135  ; -----------------------------------------------------------------------------
+Line 136 ERROR: Undefined symbol
+0000012E  33FC BD16 005455B8       136              MOVE.W  #PINPOSX1,PPOSX
+Line 137 ERROR: Undefined symbol
+00000136  0839 0016 005455B8       137              BTST.B  #KBDBITF1,(KBDEDGE)
+0000013E  6700 001A                138              BEQ     .END
+Line 139 ERROR: Undefined symbol
+00000142  33FC BD16 005455B8       139              MOVE.W  #STAPLAY,STANEXT
+Line 140 ERROR: Symbol value differs between first and second pass
+0000014A                           140  .END        
+0000014A  4E75                     141              RTS
+0000014C                           142  ; -----------------------------------------------------------------------------
+Line 143 ERROR: Symbol value differs between first and second pass
+0000014C                           143  STAPLAYU
+0000014C                           144  ; PLAY STATE UPDATE
+0000014C                           145  ; INPUT    - NONE
+0000014C                           146  ; OUTPUT   - NONE
+0000014C                           147  ; MODIFIES - NONE
+0000014C                           148  ; -----------------------------------------------------------------------------
+0000014C  48E7 FFFE                149              MOVEM.L D0-D7/A0-A6,-(A7)
+Line 150 ERROR: Undefined symbol
+00000150  4EB9 004DBD16            150              JSR     PLRUPD
+Line 151 ERROR: Undefined symbol
+00000156  4EB9 004DBD16            151              JSR     BUPD    
+Line 152 ERROR: Undefined symbol
+0000015C  4EB9 004DBD16            152              JSR     BLUPD
+00000162  4CDF 7FFF                153              MOVEM.L (A7)+,D0-D7/A0-A6          
+00000166  4E75                     154              RTS
+00000168                           155  ; -----------------------------------------------------------------------------
+Line 156 ERROR: Symbol value differs between first and second pass
+00000168                           156  STAPLAYP
+00000168                           157  ; PLAY STATE PLOT
+00000168                           158  ; INPUT    - NONE
+00000168                           159  ; OUTPUT   - NONE
+00000168                           160  ; MODIFIES - NONE
+00000168                           161  ; -----------------------------------------------------------------------------
+00000168  48E7 FFFE                162              MOVEM.L D0-D7/A0-A6,-(A7)
+Line 163 ERROR: Undefined symbol
+0000016C  4EB9 004DBD16            163              JSR     BPLOT
 Line 164 ERROR: Undefined symbol
-0000012E  4EB9 004DBD16            164              JSR     DMMINIT
-00000134                           165              
-00000134  4E75                     166              RTS
-00000136                           167  ; -----------------------------------------------------------------------------
-Line 168 ERROR: Symbol value differs between first and second pass
-00000136                           168  STAINTRU
-00000136                           169  ; INTRO STATE UPDATE
-00000136                           170  ; INPUT    - NONE
-00000136                           171  ; OUTPUT   - NONE
-00000136                           172  ; MODIFIES - NONE
-00000136                           173  ; -----------------------------------------------------------------------------
-00000136  48E7 FFFE                174              MOVEM.L D0-D7/A0-A6,-(A7)
-0000013A                           175              
-Line 176 ERROR: Undefined symbol
-0000013A  0839 0016 005455B8       176              BTST.B  #KBDBITF1,(KBDEDGE)
-00000142  6700 002E                177              BEQ     .END
-00000146                           178              
+00000172  4EB9 004DBD16            164              JSR     BLPLOT
+Line 165 ERROR: Undefined symbol
+00000178  4EB9 004DBD16            165              JSR     PPLOT
+Line 166 ERROR: Undefined symbol
+0000017E  4EB9 004DBD16            166              JSR     UTLSREENP
+Line 167 ERROR: Undefined symbol
+00000184  4EB9 004DBD16            167              JSR     UTLREADRNK
+0000018A  4CDF 7FFF                168              MOVEM.L (A7)+,D0-D7/A0-A6 
+0000018E  4E75                     169              RTS
+00000190                           170  ; -----------------------------------------------------------------------------
+Line 171 ERROR: Symbol value differs between first and second pass
+00000190                           171  STAINTRI   
+00000190                           172  ; PARA QUE EL SCORE LA VIDA SE VUELVAN A REINICIAR
+00000190                           173  
+00000190                           174  ; INTRO STATE INIT
+00000190                           175  ; INPUT    - NONE
+00000190                           176  ; OUTPUT   - NONE
+00000190                           177  ; MODIFIES - NONE
+00000190                           178  ; -----------------------------------------------------------------------------
 Line 179 ERROR: Undefined symbol
-00000146  33FC BD16 005455B8       179              MOVE.W  #STASPACE,(STANEXT)
+00000190  4EB9 004DBD16            179              JSR     DMMINIT
 Line 180 ERROR: Undefined symbol
-0000014E  4EB9 004DBD16            180              JSR     BLINIT
+00000196  4EB9 004DBD16            180              JSR     UTLREADFILE
 Line 181 ERROR: Undefined symbol
-00000154  33FC BD16 005455B8       181              MOVE.W  #PINLIVE,PLIVES
-Line 182 ERROR: Undefined symbol
-0000015C  4279 004DBD16            182              CLR.W   PSCORE            
-Line 183 ERROR: Symbol value differs between first and second pass
-00000162                           183  .END        
-00000162  4CDF 7FFF                184              MOVEM.L (A7)+,D0-D7/A0-A6
-00000166  4E75                     185              RTS
-00000168                           186  
-00000168                           187  ; -----------------------------------------------------------------------------
-Line 188 ERROR: Symbol value differs between first and second pass
-00000168                           188  STAINTRP
-00000168                           189  ; INTRO STATE PLOT
-00000168                           190  ; INPUT    - NONE
-00000168                           191  ; OUTPUT   - NONE
-00000168                           192  ; MODIFIES - NONE
-00000168                           193  ; -----------------------------------------------------------------------------
-00000168  48E7 E040                194              MOVEM.L D0-D2/A1,-(A7)
-0000016C                           195              ;TITULO
-Line 196 ERROR: Invalid opcode
-0000016C                           196              UTLLOCT INTTITX,INTTITY      
-Line 197 ERROR: Invalid opcode
-0000016C                           197              UTLSIZC #INTTITC,TXBSIZE
-0000016C  43F9 000001AE            198              LEA     .TITSTR,A1            
-00000172  103C 000E                199              MOVE.B  #14,D0
-00000176  4E4F                     200              TRAP    #15
-00000178                           201              
-00000178                           202              ;START
-Line 203 ERROR: Invalid opcode
-00000178                           203              UTLLOCT INTPRSX,INTPRSY
-Line 204 ERROR: Invalid opcode
-00000178                           204              UTLSIZC #INTPRSC,TXSSIZE
-00000178  43F9 000001BE            205              LEA     .PRSSTR,A1
-0000017E  103C 000E                206              MOVE.B  #14,D0
-00000182  4E4F                     207              TRAP    #15
-00000184                           208              
-Line 209 ERROR: Invalid opcode
-00000184                           209              UTLSNDS .SOUND,#1
-00000184                           210              
-00000184  4CDF 0207                211              MOVEM.L (A7)+,D0-D2/A1
-00000188  4E75                     212              RTS
-Line 213 ERROR: Symbol value differs between first and second pass
-0000018A= 73746172 74206C61 ...    213  .SOUND      DC.L    'start largo.wav',0
-Line 214 ERROR: Symbol value differs between first and second pass
-0000019A= 42 72 65 61 6B 69 ...    214  .TITSTR     DC.B    'Breaking Blocks',0
-Line 215 ERROR: Symbol value differs between first and second pass
-000001A9= 50 55 53 48 20 46 ...    215  .PRSSTR     DC.B    'PUSH FIRE TO START',0
-000001BC                           216              DS.W    0
-000001BC                           217  ; -----------------------------------------------------------------------------
-Line 218 ERROR: Symbol value differs between first and second pass
-000001BC                           218  STAGOVRU
-000001BC                           219  ; GAME OVER STATE UPDATE
-000001BC                           220  ; INPUT    - NONE
-000001BC                           221  ; OUTPUT   - NONE
-000001BC                           222  ; MODIFIES - NONE
-000001BC                           223  ; -----------------------------------------------------------------------------
-000001BC                           224              ;visualiza el fichero
-Line 225 ERROR: Invalid opcode
-000001BC                           225              UTLSPEN #$00FFFFFF
-Line 226 ERROR: Invalid opcode
-000001BC                           226              UTLSFIL #$00000000
-000001BC                           227  *            LEA.L   PNAME,A1
-000001BC                           228  *            MOVE.W  #LIVEPOSX,D1
-000001BC                           229  *            MOVE.W  #200,D2
-000001BC                           230  *            MOVE.B  #95,D0                   ;IMPRIME LA LINEA EN A1
-000001BC                           231  *            TRAP    #15
-000001BC                           232              
-Line 233 ERROR: Undefined symbol
-000001BC  0839 0016 005455B8       233              BTST.B  #KBDBITF1,(KBDEDGE)
-000001C4  6700 0020                234              BEQ     .END
-Line 235 ERROR: Invalid opcode
-000001C8                           235              UTLSNDST
-Line 236 ERROR: Undefined symbol
-000001C8  33FC BD16 005455B8       236              MOVE.W  #STAINTR,(STANEXT)
+0000019C  4EB9 004DBD16            181              JSR     UTLINTRI
+Line 182 ERROR: Invalid opcode
+000001A2                           182              UTLSNDS .SOUND,#1
+000001A2                           183  *            UTLSIZC #INTPRSC,TXSSIZE
+000001A2                           184  *            UTLLOCT 18,25  
+000001A2                           185  *            ;UTLSVNAME  
+000001A2                           186  *            
+000001A2                           187  *            CLR.B   PNAME
+000001A2                           188  *            LEA.L   .INSTRUCT,A1            
+000001A2                           189  *            MOVE.B  #14,D0
+000001A2                           190  *            TRAP    #15
+000001A2                           191  *            LEA.L   PNAME,A1                ; SAVES IN PNAME
+000001A2                           192  *            MOVE.B  #2,D0
+000001A2                           193  *            TRAP    #15
+000001A2                           194             
+000001A2  4E75                     195              RTS
+Line 196 ERROR: Symbol value differs between first and second pass
+000001A4= 73746172 74206C61 ...    196  .SOUND      DC.L    'start largo.wav',0
+000001B4                           197  
+000001B4                           198  ; -----------------------------------------------------------------------------
+Line 199 ERROR: Symbol value differs between first and second pass
+000001B4                           199  STAINTRU
+000001B4                           200  ; INTRO STATE UPDATE
+000001B4                           201  ; INPUT    - NONE
+000001B4                           202  ; OUTPUT   - NONE
+000001B4                           203  ; MODIFIES - NONE
+000001B4                           204  ; -----------------------------------------------------------------------------
+000001B4  48E7 8040                205              MOVEM.L D0/A1,-(A7)
+Line 206 ERROR: Invalid opcode
+000001B8                           206              UTLSNDS .SOUND,#1
+Line 207 ERROR: Undefined symbol
+000001B8  0839 0016 005455B8       207              BTST.B  #KBDBITF1,(KBDEDGE)
+000001C0  6700 005C                208              BEQ     .END
+Line 209 ERROR: Undefined symbol
+000001C4  33FC BD16 005455B8       209              MOVE.W  #STASPACE,STANEXT
+Line 210 ERROR: Invalid opcode
+000001CC                           210              UTLSNDST
+Line 211 ERROR: Undefined symbol
+000001CC  4EB9 004DBD16            211              JSR     PLRINIT
+Line 212 ERROR: Undefined symbol
+000001D2  4EB9 004DBD16            212              JSR     BLINIT
+Line 213 ERROR: Undefined symbol
+000001D8  4EB9 004DBD16            213              JSR     BINIT
+Line 214 ERROR: Undefined symbol
+000001DE  33FC BD16 005455B8       214              MOVE.W  #PINLIVE,PLIVES
+Line 215 ERROR: Undefined symbol
+000001E6  4279 004DBD16            215              CLR.W   PSCORE   
+Line 216 ERROR: Invalid opcode
+000001EC                           216              UTLSIZC #INTPRSC,TXSSIZE
+Line 217 ERROR: Invalid opcode
+000001EC                           217              UTLLOCT 18,25  
+000001EC                           218              ;UTLSVNAME  
+000001EC                           219              
+Line 220 ERROR: Undefined symbol
+000001EC  4239 004DBD16            220              CLR.B   PNAME
+000001F2  43F9 00000238            221              LEA.L   .INSTRUCT,A1            
+000001F8  103C 000E                222              MOVE.B  #14,D0
+000001FC  4E4F                     223              TRAP    #15
+Line 224 ERROR: Undefined symbol
+000001FE  43F9 004DBD16            224              LEA.L   PNAME,A1                ; SAVES IN PNAME
+00000204  103C 0002                225              MOVE.B  #2,D0
+00000208  4E4F                     226              TRAP    #15
+0000020A                           227               
+0000020A                           228                    
+Line 229 ERROR: Symbol value differs between first and second pass
+0000020A                           229  .END        
+0000020A  4CDF 0201                230              MOVEM.L (A7)+,D0/A1
+0000020E  4E75                     231              RTS
+Line 232 ERROR: Symbol value differs between first and second pass
+00000210= 73746172 74206C61 ...    232  .SOUND      DC.L    'start largo.wav',0
+Line 233 ERROR: Symbol value differs between first and second pass
+00000220= 45 4E 54 45 52 20 ...    233  .INSTRUCT   DC.B   'ENTER YOUR NAME (MAX. 8 LETTERS): ',0
+00000242= 0000                     234              DC.W    0
+00000244                           235             
+00000244                           236  ; -----------------------------------------------------------------------------
 Line 237 ERROR: Symbol value differs between first and second pass
-000001D0                           237  .END        RTS
-000001D0                           238  
-000001D0                           239  ; -----------------------------------------------------------------------------
-Line 240 ERROR: Symbol value differs between first and second pass
-000001D0                           240  STAGOVRP
-000001D0                           241  ; GAME OVER STATE PLOT
-000001D0                           242  ; INPUT    - NONE
-000001D0                           243  ; OUTPUT   - NONE
-000001D0                           244  ; MODIFIES - NONE
-000001D0                           245  ; -----------------------------------------------------------------------------
-000001D0                           246  
-000001D0  48E7 E040                247              MOVEM.L A1/D0-D2,-(A7)
-000001D4                           248              
-000001D4                           249              ;GAME OVER TEXT
-Line 250 ERROR: Invalid opcode
-000001D4                           250              UTLLOCT GOVERX,GOVERY            
-Line 251 ERROR: Invalid opcode
-000001D4                           251              UTLSIZC #GOVERC,TXBSIZE
-Line 252 ERROR: Invalid opcode
-000001D4                           252              UTLSFIL #$00000000
-000001D4  43F9 000001FE            253              LEA     .GOVSTR,A1              ;PONE EL TEXTO
-000001DA  103C 000E                254              MOVE.B  #14,D0
-000001DE  4E4F                     255              TRAP    #15
-000001E0                           256  
-000001E0  4CDF 0207                257              MOVEM.L (A7)+,A1/D0-D2
-000001E4  4E75                     258              RTS
-Line 259 ERROR: Symbol value differs between first and second pass
-000001E6= 47 41 4D 45 20 4F ...    259  .GOVSTR     DC.B    'GAME OVER',0
-000001F0                           260              DS.W    0
-000001F0                           261  
-000001F0                           262  
-000001F0                           263  
-000001F0                           264  
-000001F0                           265  
-000001F0                           266  
-000001F0                           267  
-000001F0                           268  
-000001F0                           269  
-000001F0                           270  
-000001F0                           271  
-000001F0                           272  
-000001F0                           273  
-000001F0                           274  
-Line 275 WARNING: END directive missing, starting address not set
+00000244                           237  STAINTRP
+00000244                           238  ; INTRO STATE PLOT
+00000244                           239  ; INPUT    - NONE
+00000244                           240  ; OUTPUT   - NONE
+00000244                           241  ; MODIFIES - NONE
+00000244                           242  ; -----------------------------------------------------------------------------
+Line 243 ERROR: Undefined symbol
+00000244  4EB9 004DBD16            243             JSR      UTLINTRI
+0000024A  48E7 E040                244              MOVEM.L D0-D2/A1,-(A7)
+0000024E                           245              ;START
+Line 246 ERROR: Invalid opcode
+0000024E                           246              UTLLOCT INTPRSX,INTPRSY
+Line 247 ERROR: Invalid opcode
+0000024E                           247              UTLSIZC #INTPRSC,TXSSIZE
+0000024E  43F9 0000027A            248              LEA     .PRSSTR,A1
+00000254  103C 000E                249              MOVE.B  #14,D0
+00000258  4E4F                     250              TRAP    #15
+0000025A  4CDF 0207                251              MOVEM.L (A7)+,D0-D2/A1
+0000025E  4E75                     252              RTS
+Line 253 ERROR: Symbol value differs between first and second pass
+00000260= 50 55 53 48 20 46 ...    253  .PRSSTR     DC.B    'PUSH FIRE TO START',0
+00000272                           254              DS.W    0
+00000272                           255             
+00000272                           256  ; -----------------------------------------------------------------------------
+Line 257 ERROR: Symbol value differs between first and second pass
+00000272                           257  STAFINU
+00000272                           258  ; GAME OVER STATE UPDATE
+00000272                           259  ; INPUT    - NONE
+00000272                           260  ; OUTPUT   - NONE
+00000272                           261  ; MODIFIES - NONE
+00000272                           262  ; -----------------------------------------------------------------------------
+00000272                           263              ;visualiza el fichero
+Line 264 ERROR: Undefined symbol
+00000272  0839 0016 005455B8       264              BTST.B  #KBDBITF1,(KBDEDGE)
+0000027A  6700 0026                265              BEQ     .END
+Line 266 ERROR: Invalid opcode
+0000027E                           266              UTLSNDST
+Line 267 ERROR: Undefined symbol
+0000027E  33FC BD16 005455B8       267              MOVE.W  #STAINTR,(STANEXT)
+Line 268 ERROR: Symbol value differs between first and second pass
+00000286                           268  .END        RTS
+00000286                           269  
+00000286                           270  ; -----------------------------------------------------------------------------
+Line 271 ERROR: Symbol value differs between first and second pass
+00000286                           271  STAGOVRP
+00000286                           272  ; GAME OVER STATE PLOT
+00000286                           273  ; INPUT    - NONE
+00000286                           274  ; OUTPUT   - NONE
+00000286                           275  ; MODIFIES - NONE
+00000286                           276  ; -----------------------------------------------------------------------------
+00000286                           277  
+00000286  48E7 E040                278              MOVEM.L A1/D0-D2,-(A7)
+0000028A                           279              
+0000028A                           280              ;GAME OVER TEXT
+Line 281 ERROR: Invalid opcode
+0000028A                           281              UTLLOCT GOVERX,GOVERY            
+Line 282 ERROR: Invalid opcode
+0000028A                           282              UTLSIZC #GOVERC,TXBSIZE
+Line 283 ERROR: Invalid opcode
+0000028A                           283              UTLSFIL #$00000000
+0000028A  43F9 000002BA            284              LEA     .GOVSTR,A1              ;PONE EL TEXTO
+00000290  103C 000E                285              MOVE.B  #14,D0
+00000294  4E4F                     286              TRAP    #15
+00000296                           287  
+00000296  4CDF 0207                288              MOVEM.L (A7)+,A1/D0-D2
+0000029A  4E75                     289              RTS
+Line 290 ERROR: Symbol value differs between first and second pass
+0000029C= 47 41 4D 45 20 4F ...    290  .GOVSTR     DC.B    'GAME OVER',0
+000002A6                           291              DS.W    0
+000002A6                           292              
+000002A6                           293  ; -----------------------------------------------------------------------------
+Line 294 ERROR: Symbol value differs between first and second pass
+000002A6                           294  STAWINP
+000002A6                           295  ; WIN STATE PLOT
+000002A6                           296  ; INPUT    - NONE
+000002A6                           297  ; OUTPUT   - NONE
+000002A6                           298  ; MODIFIES - NONE
+000002A6                           299  ; -----------------------------------------------------------------------------
+000002A6  48E7 E040                300              MOVEM.L D0-D2/A1,-(A7)
+000002AA                           301              ;TITULO
+Line 302 ERROR: Invalid opcode
+000002AA                           302              UTLLOCT INTTITX,INTTITY      
+Line 303 ERROR: Invalid opcode
+000002AA                           303              UTLSIZC #INTTITC,TXBSIZE
+000002AA  43F9 000002DA            304              LEA     .TITSTR,A1            
+000002B0  103C 000E                305              MOVE.B  #14,D0
+000002B4  4E4F                     306              TRAP    #15
+000002B6  4CDF 0207                307              MOVEM.L (A7)+,D0-D2/A1
+000002BA  4E75                     308              RTS
+Line 309 ERROR: Symbol value differs between first and second pass
+000002BC= 59 4F 55 20 57 4F 4E     309  .TITSTR     DC.B    'YOU WON',0
+000002C4                           310              DS.W    0
+000002C4                           311  
+000002C4                           312  
+000002C4                           313  
+000002C4                           314  
+000002C4                           315  
+000002C4                           316  
+000002C4                           317  
+Line 318 WARNING: END directive missing, starting address not set
 
-61 errors detected
+73 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-STAEMPTYG           9E
-STAEMPTYP           9C
-STAGOVRP            1E8
-STAGOVRP:GOVSTR     1FE
-STAGOVRU            1D2
-STAGOVRU:END        1E6
+STAEMPTY            A8
+STAFINU             28E
+STAFINU:END         2A2
+STAGOVRP            2A4
+STAGOVRP:GOVSTR     2BA
 STAINIT             0
-STAINTRI            138
-STAINTRP            178
-STAINTRP:PRSSTR     1BE
-STAINTRP:SOUND      19A
-STAINTRP:TITSTR     1AE
-STAINTRU            146
-STAINTRU:END        172
-STAPLAYI            AC
-STAPLAYP            110
-STAPLAYU            F4
-STAPLOT             70
-STAPLOT:PLTTBL      8C
-STASPACEU           D6
-STASPACEU:END       F2
+STAINTRI            1A0
+STAINTRI:SOUND      1B4
+STAINTRP            25E
+STAINTRP:PRSSTR     27A
+STAINTRU            1C8
+STAINTRU:END        21E
+STAINTRU:INSTRUCT   238
+STAINTRU:SOUND      224
+STAPLAYI            114
+STAPLAYP            178
+STAPLAYU            15C
+STAPLOT             78
+STAPLOT:PLTTBL      94
+STASAVEI            AA
+STASAVEI:LOAD       F0
+STASAVEI:LOOP       D6
+STASAVEI:MOVER      DA
+STASAVEI:NAME       102
+STASPACEU           13E
+STASPACEU:END       15A
 STAUPD              12
 STAUPD:DOUPD        38
 STAUPD:INITBL       50
-STAUPD:UPDTBL       60
+STAUPD:UPDTBL       64
+STAWINP             2C4
+STAWINP:TITSTR      2DA

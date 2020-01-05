@@ -24,12 +24,10 @@ STAUPD
             MOVE.W  STANEXT,D0
             CMP.W   (STACUR),D0
             BEQ     .DOUPD
-            
             MOVE.W  D0,STACUR 
             LSL.L   #2,D0
             MOVE.L  D0,A0
             MOVE.L  .INITBL(A0),A0
-            
             JSR     (A0)
 .DOUPD      CLR.L   D0                      ; IN ANY CASE, DO UPDATE
             MOVE.W  STACUR,D0
@@ -58,8 +56,6 @@ STAPLOT
             MOVEM.L (A7)+,D0/A0
             RTS
 .PLTTBL     DC.L    STAINTRP,STAPLAYP,STAPLAYP,STAGOVRP,STAWINP
-                           ;SPACE        
-
 ; -----------------------------------------------------------------------------
 STAEMPTY
 ; EMPTY SUBROUTINE FOR CASES WITH NOTHING TO DO
@@ -183,12 +179,7 @@ STAINTRI
             JSR     DMMINIT
             JSR     UTLREADFILE
             JSR     UTLINTRI
-            UTLSNDS .SOUND,#1
-            UTLSIZC #INTPRSC,TXSSIZE
-            UTLLOCT 18,25  
-            UTLSVNAME
             RTS
-.SOUND      DC.L    'start largo.wav',0
 
 ; -----------------------------------------------------------------------------
 STAINTRU
@@ -197,22 +188,24 @@ STAINTRU
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-            MOVEM.L D0-D7/A0-A6,-(A7)
             UTLSNDS .SOUND,#1
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
             MOVE.W  #STASPACE,STANEXT
             UTLSNDST
+            UTLSIZC #INTPRSC,TXSSIZE
+            UTLLOCT 18,25  
+            JSR     UTLSVNAME
             JSR     PLRINIT
             JSR     BLINIT
             JSR     BINIT
             MOVE.W  #PINLIVE,PLIVES
-            CLR.W   PSCORE            
+            CLR.W   PSCORE              
 .END        
-            MOVEM.L (A7)+,D0-D7/A0-A6
             RTS
 .SOUND      DC.L    'start largo.wav',0
 
+           
 ; -----------------------------------------------------------------------------
 STAINTRP
 ; INTRO STATE PLOT
@@ -288,6 +281,8 @@ STAWINP
             RTS
 .TITSTR     DC.B    'YOU WON',0
             DS.W    0
+
+
 
 
 

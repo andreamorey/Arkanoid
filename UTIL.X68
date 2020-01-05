@@ -73,10 +73,11 @@ UTLSNDST     MACRO
             TRAP    #15
             ENDM
 ; -----------------------------------------------------------------------------            
-UTLSVNAME  MACRO
+UTLSVNAME  
 ; WRAPPER FOR SAVING THE NAME OF THE PLAYER
 ; MAX CARACTERS: 20
 ; -----------------------------------------------------------------------------
+            MOVEM.L D0/A1,-(A7)
             CLR.B   PNAME
             LEA.L   .INSTRUCT,A1            
             MOVE.B  #14,D0
@@ -84,9 +85,11 @@ UTLSVNAME  MACRO
             LEA.L   PNAME,A1                ; SAVES IN PNAME
             MOVE.B  #2,D0
             TRAP    #15
+            MOVEM.L (A7)+,D0/A1
             RTS
 .INSTRUCT   DC.B    'ENTER YOUR NAME (MAX. 8 LETTERS): ',0
-            ENDM
+            DC.W    0
+         
 ; -----------------------------------------------------------------------------
 ; =============================================================================
 ; UTILITY SUBROUTINES
@@ -108,7 +111,7 @@ UTLINTRI
             MOVEM.L (A7)+,D0-D2/A1
             RTS
 .TITSTR     DC.B    'Breaking Blocks',0
-            DS.W    0
+            DC.W    0
 ; -----------------------------------------------------------------------------
 UTLCHCOLW
 ; CHECKS COLLISION WITH WALL
@@ -330,7 +333,7 @@ UTLSREENP
             MOVEM.L (A7)+,D0-D5/A1
             RTS   
 .TXTSCORE   DC.B    'SCORE: ',0
-            DS.W    0
+            DC.W    0
 ; -----------------------------------------------------------------------------
 UTLREADFILE  
 ; READS THE FILE OF SCORE AND SAVES THE INFO IN RNKTABLE
@@ -406,6 +409,7 @@ UTLREADRNK
             MOVEM.L (A7)+,D0-D3/A1
             RTS
 .TEXT       DC.B    'RANKING TABLE:',0
+            DC.W    0
 ; -----------------------------------------------------------------------------
 UTLWRRNK 
 ; ADDS THE PLAYER AT THE TOP OF THE TABLE
@@ -472,6 +476,7 @@ UTLWRFILE
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1
             RTS
+
 
 
 *~Font name~Courier New~

@@ -133,15 +133,15 @@ KBDREAD
             MOVE.L  #KBDPAUSE<<24+KBDFIRE3<<16+KBDFIRE2<<8+KBDFIRE1,D1
             TRAP    #15
         
-            CLR.B   D2                      ;D2 WILL CONTAIN THE VALUE OF KBDVAL
+            CLR.B   D2                      ; D2 WILL CONTAIN THE VALUE OF KBDVAL
             MOVE.W  #3,D4
             
 .LOOP1      
      
-            LSL.L   #8,D1                   ;FLAG C = THE VALUE OF THE KBD
+            LSL.L   #8,D1                   ; FLAG C = THE VALUE OF THE KBD
             MOVE.W  SR,D3                   
-            ANDI.W  #$0001,D3               ;D3 = VALUE OF THE FLAG C
-            LSL.B   #1,D2                   ;MOVE THE BITS TO THE LEFT
+            ANDI.W  #$0001,D3               ; D3 = VALUE OF THE FLAG C
+            LSL.B   #1,D2                   ; MOVE THE BITS TO THE LEFT
             OR.B    D3,D2                   
             DBRA    D4,.LOOP1
         
@@ -152,7 +152,7 @@ KBDREAD
             
             MOVE.W  #3,D4
 .LOOP2      
-            LSL.L   #8,D1                   ;FLAG C = THE VALUE OF THE KBD
+            LSL.L   #8,D1                   ; FLAG C = THE VALUE OF THE KBD
             MOVE.W  SR,D3
             ANDI.W  #$0001,D3    
             LSL.B   #1,D2
@@ -160,9 +160,9 @@ KBDREAD
             
             DBRA    D4,.LOOP2
             
-            ;D2 = KBDPAUSE KBDFIRE3 KBDFIRE2 KBDFIRE1 KBDDOWN KBDRIGHT KBDUP KBDLEFT
+            ; D2 = KBDPAUSE KBDFIRE3 KBDFIRE2 KBDFIRE1 KBDDOWN KBDRIGHT KBDUP KBDLEFT
             
-            ;UPDATE KBDVAL AND KBDEDGE
+            ; UPDATE KBDVAL AND KBDEDGE
             MOVE.B  KBDVAL,D3
             NOT.B   D3
             MOVE.B  D2,KBDVAL
@@ -295,28 +295,6 @@ DMMFREE
             CLR.W   (A0)
             MOVEM.L (A7)+,D0/A0
             RTS
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 *~Font name~Courier New~
 *~Font size~16~
