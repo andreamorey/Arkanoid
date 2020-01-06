@@ -87,7 +87,7 @@ UTLSVNAME
             TRAP    #15
             MOVEM.L (A7)+,D0/A1
             RTS
-.INSTRUCT   DC.B    'ENTER YOUR NAME (MAX. 8 LETTERS): ',0
+.INSTRUCT   DC.B    'ENTER YOUR NAME (MAX. 6 LETTERS): ',0
             DC.W    0
          
 ; -----------------------------------------------------------------------------
@@ -476,6 +476,7 @@ UTLWRFILE
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1
             RTS
+
 
 
 

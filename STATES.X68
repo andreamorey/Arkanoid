@@ -192,10 +192,11 @@ STAINTRU
             BTST.B  #KBDBITF1,(KBDEDGE)
             BEQ     .END
             MOVE.W  #STASPACE,STANEXT
-            UTLSNDST
+            JSR     UTLINTRI
             UTLSIZC #INTPRSC,TXSSIZE
             UTLLOCT 18,25  
             JSR     UTLSVNAME
+            UTLSNDST
             JSR     PLRINIT
             JSR     BLINIT
             JSR     BINIT
@@ -247,9 +248,7 @@ STAGOVRP
 ; OUTPUT   - NONE
 ; MODIFIES - NONE
 ; -----------------------------------------------------------------------------
-
             MOVEM.L A1/D0-D2,-(A7)
-            
             ;GAME OVER TEXT
             UTLLOCT GOVERX,GOVERY            
             UTLSIZC #GOVERC,TXBSIZE
@@ -272,15 +271,16 @@ STAWINP
 ; -----------------------------------------------------------------------------
             MOVEM.L D0-D2/A1,-(A7)
             ;TITULO
-            UTLLOCT INTTITX,INTTITY      
-            UTLSIZC #INTTITC,TXBSIZE
+            UTLLOCT INTTITX-1,INTTITY      
+            UTLSIZC #GREEN,TXBSIZE
             LEA     .TITSTR,A1            
             MOVE.B  #14,D0
             TRAP    #15
             MOVEM.L (A7)+,D0-D2/A1
             RTS
-.TITSTR     DC.B    'YOU WON',0
+.TITSTR     DC.B    'CONGRATULATIONS, YOU WON!',0
             DS.W    0
+
 
 
 

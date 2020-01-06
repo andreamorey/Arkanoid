@@ -1,6 +1,6 @@
-00001DC0 Starting Address
+00001FAA Starting Address
 Assembler used: EASy68K Editor/Assembler v5.16.01
-Created On: 04/01/2020 1:08:04
+Created On: 06/01/2020 1:53:41
 
 00000000                             1  ;-----------------------------------------------------------
 00000000                             2  ;           BLOCKS
@@ -10,254 +10,257 @@ Created On: 04/01/2020 1:08:04
 00000000  48E7 8080                  6              MOVEM.L D0/A0,-(A7)
 Line 7 ERROR: Undefined symbol
 00000004  41F9 004DBD16              7              LEA.L   BLMATRIX,A0
-0000000A                             8  *            MOVE.W #BLROW-1,D0             ;7
-0000000A                             9  .LOOP       
-0000000A  10FC 00FF                 10              MOVE.B  #%11111111,(A0)+
-0000000E  51C8 FFFA                 11              DBRA    D0,.LOOP
-00000012                            12              
-Line 13 ERROR: Undefined symbol
-00000012  4279 004DBD16             13              CLR.W   BLCOUNTER
-00000018  4EB9 00000178             14              JSR     BLCOUNTBL
-Line 15 ERROR: Undefined symbol
-0000001E  33FC 0001 005455B8        15              MOVE.W  #1,LEVEL
-00000026                            16              
-00000026                            17  *            MOVE.W  #BINSPEED,BSPEEDX
-00000026                            18  *            MOVE.W  #BINSPEED,BSPEEDY
-00000026                            19  
-00000026  4CDF 0101                 20              MOVEM.L (A7)+,D0/A0
-0000002A  4E75                      21              RTS
-0000002C                            22  BLLEV2           
-0000002C  48E7 8080                 23              MOVEM.L D0/A0,-(A7)
+0000000A                             8  *            MOVE.W #BLROW-1,D0             
+0000000A                             9  .LOOP                   
+0000000A                            10  *            MOVE.B  #%11111111,(A0)+
+0000000A                            11  *            DBRA    D0,.LOOP
+0000000A  10FC 0000                 12              MOVE.B  #%00000000,(A0)+
+0000000E  10FC 0000                 13              MOVE.B  #%00000000,(A0)+
+00000012  10FC 0000                 14              MOVE.B  #%00000000,(A0)+
+00000016  10FC 0000                 15              MOVE.B  #%00000000,(A0)+
+0000001A  10FC 0000                 16              MOVE.B  #%00000000,(A0)+
+0000001E  10FC 0000                 17              MOVE.B  #%00000000,(A0)+
+00000022  10FC 0000                 18              MOVE.B  #%00000000,(A0)+
+00000026  10FC 0000                 19              MOVE.B  #%00000000,(A0)+
+0000002A  10FC 0000                 20              MOVE.B  #%00000000,(A0)+
+0000002E  10FC 0000                 21              MOVE.B  #%00000000,(A0)+
+00000032  10FC 0000                 22              MOVE.B  #%00000000,(A0)+
+00000036  10FC 0080                 23              MOVE.B  #%10000000,(A0)+
 Line 24 ERROR: Undefined symbol
-00000030  41F9 004DBD16             24              LEA.L   BLMATRIX,A0
-Line 25 ERROR: Comma expected
-00000036                            25              MOVE.W  #BLROW-1,D0             
-Line 26 ERROR: Symbol value differs between first and second pass
-00000036                            26  .LOOP       
-00000036  10FC 005A                 27              MOVE.B  #%01011010,(A0)+
-0000003A  51C8 FFFE                 28              DBRA    D0,.LOOP
-0000003E                            29  
-Line 30 ERROR: Undefined symbol
-0000003E  4279 004DBD16             30              CLR.W   BLCOUNTER
-00000044  4EB9 00000178             31              JSR     BLCOUNTBL
-0000004A                            32              
-Line 33 ERROR: Undefined symbol
-0000004A  4EB9 004DBD16             33              JSR     PLRLEV2
-00000050                            34  
-Line 35 ERROR: Undefined symbol
-00000050  4EB9 004DBD16             35              JSR     BNXTLEV
-00000056                            36  
-00000056                            37  *            MOVE.W  #BINSPEED,D0
-00000056                            38  *            SUBQ.W  #1,D0
-00000056                            39  *            
-00000056                            40  *            MOVE.W  D0,BSPEEDX
-00000056                            41  *            MOVE.W  D0,BSPEEDY
-00000056                            42  *            NEG.W   BSPEEDX
-00000056  4CDF 0101                 43              MOVEM.L (A7)+,D0/A0
-0000005A  4E75                      44              RTS
-0000005C                            45              
-Line 46 ERROR: Symbol value differs between first and second pass
-0000005C                            46  BLLEV3              
-0000005C  48E7 0080                 47              MOVEM.L A0,-(A7)
+0000003A  4279 004DBD16             24              CLR.W   BLCOUNTER
+00000040  4EB9 000001DC             25              JSR     BLCOUNTBL
+Line 26 ERROR: Undefined symbol
+00000046  33FC 0001 005455B8        26              MOVE.W  #1,LEVEL
+0000004E  4CDF 0101                 27              MOVEM.L (A7)+,D0/A0
+00000052  4E75                      28              RTS
+00000054                            29  BLLEV2           
+00000054  48E7 8080                 30              MOVEM.L D0/A0,-(A7)
+Line 31 ERROR: Undefined symbol
+00000058  41F9 004DBD16             31              LEA.L   BLMATRIX,A0
+0000005E                            32  *            MOVE.W  #BLROW-1,D0 
+0000005E  10FC 0000                 33              MOVE.B  #%00000000,(A0)+
+00000062  10FC 0000                 34              MOVE.B  #%00000000,(A0)+
+00000066  10FC 0000                 35              MOVE.B  #%00000000,(A0)+
+0000006A  10FC 0000                 36              MOVE.B  #%00000000,(A0)+
+0000006E  10FC 0000                 37              MOVE.B  #%00000000,(A0)+
+00000072  10FC 0000                 38              MOVE.B  #%00000000,(A0)+
+00000076  10FC 0000                 39              MOVE.B  #%00000000,(A0)+
+0000007A  10FC 0000                 40              MOVE.B  #%00000000,(A0)+
+0000007E  10FC 0000                 41              MOVE.B  #%00000000,(A0)+
+00000082  10FC 0000                 42              MOVE.B  #%00000000,(A0)+
+00000086  10FC 0000                 43              MOVE.B  #%00000000,(A0)+
+0000008A  10FC 0080                 44              MOVE.B  #%10000000,(A0)+            
+0000008E                            45  *.LOOP       
+0000008E                            46  *            MOVE.B  #%01011010,(A0)+
+0000008E                            47  *            DBRA    D0,.LOOP
 Line 48 ERROR: Undefined symbol
-00000060  41F9 004DBD16             48              LEA.L   BLMATRIX,A0         
-00000066  10FC 00F5                 49              MOVE.B  #%11110101,(A0)+
-0000006A  10FC 00A5                 50              MOVE.B  #%10100101,(A0)+
-0000006E  10FC 00A5                 51              MOVE.B  #%10100101,(A0)+
-00000072  10FC 00A5                 52              MOVE.B  #%10100101,(A0)+
-00000076  10FC 00A5                 53              MOVE.B  #%10100101,(A0)+
-0000007A  10FC 00E5                 54              MOVE.B  #%11100101,(A0)+
-0000007E  10FC 00A5                 55              MOVE.B  #%10100101,(A0)+
-00000082  10FC 00A5                 56              MOVE.B  #%10100101,(A0)+
-00000086  10FC 00A5                 57              MOVE.B  #%10100101,(A0)+
-0000008A  10FC 00A5                 58              MOVE.B  #%10100101,(A0)+
-0000008E  10FC 00A5                 59              MOVE.B  #%10100101,(A0)+
-00000092  10FC 00F5                 60              MOVE.B  #%11110101,(A0)+
-00000096                            61  
-00000096                            62  *            MOVE.B  #%00000000,(A0)+
-00000096                            63  *            MOVE.B  #%00000000,(A0)+
-00000096                            64  *            MOVE.B  #%00000000,(A0)+
-00000096                            65  *            MOVE.B  #%00000000,(A0)+
-00000096                            66  *            MOVE.B  #%00000000,(A0)+
-00000096                            67  *            MOVE.B  #%00000000,(A0)+
-00000096                            68  *            MOVE.B  #%00000000,(A0)+
-00000096                            69  *            MOVE.B  #%00000000,(A0)+
-00000096                            70  *            MOVE.B  #%00000000,(A0)+
-00000096                            71  *            MOVE.B  #%00000000,(A0)+
-00000096                            72  *            MOVE.B  #%00000000,(A0)+
-00000096                            73  *            MOVE.B  #%10000000,(A0)+
-00000096                            74  
-Line 75 ERROR: Undefined symbol
-00000096  4279 004DBD16             75              CLR.W   BLCOUNTER
-0000009C  4EB9 00000178             76              JSR     BLCOUNTBL
-Line 77 ERROR: Undefined symbol
-000000A2  4EB9 004DBD16             77              JSR     PLRLEV3
-000000A8                            78              
-Line 79 ERROR: Undefined symbol
-000000A8  4EB9 004DBD16             79              JSR     BNXTLEV
-000000AE                            80              
-000000AE                            81  *            MOVE.W  #BINSPEED,D0
-000000AE                            82  *            SUBQ.W  #2,D0
-000000AE                            83  *            
-000000AE                            84  *            MOVE.W  D0,BSPEEDX
-000000AE                            85  *            MOVE.W  D0,BSPEEDY
-000000AE                            86  *            NEG.W   BSPEEDX
-000000AE  4CDF 0100                 87              MOVEM.L (A7)+,A0
-000000B2  4E75                      88              RTS
-000000B4                            89  
-000000B4                            90  
-000000B4                            91  ; -----------------------------------------------------------------------------
-Line 92 ERROR: Symbol value differs between first and second pass
-000000B4                            92  BLUPD
-000000B4                            93  ; UPDATES THE LEVELS OF THE GAME
-000000B4                            94  ; INPUT     - NONE
-000000B4                            95  ; OUTPUT    - NONE
-000000B4                            96  ; MODIFIES  - NONE
-000000B4                            97  ; -----------------------------------------------------------------------------
-000000B4  48E7 C000                 98              MOVEM.L D0-D1,-(A7)
-Line 99 ERROR: Undefined symbol
-000000B8  3039 004DBD16             99              MOVE.W  BLCOUNTER,D0
-000000BE  B07C 0000                100              CMP     #0,D0                   ;SI NO HAY BLOQUES SALTA
-000000C2  6600 0056                101              BNE     .END
-Line 102 ERROR: Symbol value differs between first and second pass
-000000C6                           102  .NEXTLEVEL  
-Line 103 ERROR: Undefined symbol
-000000C6  5279 005455B8            103              ADD.W   #1,LEVEL
-Line 104 ERROR: Invalid opcode
-000000CC                           104              UTLSNDS .SOUND,#1
-Line 105 ERROR: Undefined symbol
-000000CC  3239 004DBD16            105              MOVE.W  LEVEL,D1
-000000D2  B27C 0004                106              CMP     #4,D1
-000000D6  6700 003A                107              BEQ     .WON
-000000DA  B27C 0003                108              CMP     #3,D1              
-000000DE  6700 0018                109              BEQ     .NIVEL3
-Line 110 ERROR: Undefined symbol
-000000E2  33FC BD16 005455B8       110              MOVE.W  #STASPACE,(STANEXT)
-000000EA  4EB8 002C                111              JSR     BLLEV2
-000000EE  4EF9 0000011A            112              JMP     .END
-Line 113 ERROR: Symbol value differs between first and second pass
-000000F4                           113  .NIVEL3
-000000F4  B27C 0003                114              CMP.W   #3,D1
-000000F8  6600 0018                115              BNE     .WON
+0000008E  4279 004DBD16             48              CLR.W   BLCOUNTER
+00000094  4EB9 000001DC             49              JSR     BLCOUNTBL
+0000009A  4CDF 0101                 50              MOVEM.L (A7)+,D0/A0
+0000009E  4E75                      51              RTS
+000000A0                            52              
+000000A0                            53  BLLEV3              
+000000A0  48E7 0080                 54              MOVEM.L A0,-(A7)
+Line 55 ERROR: Undefined symbol
+000000A4  41F9 004DBD16             55              LEA.L   BLMATRIX,A0         
+000000AA                            56  *            MOVE.B  #%11110101,(A0)+
+000000AA                            57  *            MOVE.B  #%10100101,(A0)+
+000000AA                            58  *            MOVE.B  #%10100101,(A0)+
+000000AA                            59  *            MOVE.B  #%10100101,(A0)+
+000000AA                            60  *            MOVE.B  #%10100101,(A0)+
+000000AA                            61  *            MOVE.B  #%11100101,(A0)+
+000000AA                            62  *            MOVE.B  #%10100101,(A0)+
+000000AA                            63  *            MOVE.B  #%10100101,(A0)+
+000000AA                            64  *            MOVE.B  #%10100101,(A0)+
+000000AA                            65  *            MOVE.B  #%10100101,(A0)+
+000000AA                            66  *            MOVE.B  #%10100101,(A0)+
+000000AA                            67  *            MOVE.B  #%11110101,(A0)+
+000000AA  10FC 0000                 68              MOVE.B  #%00000000,(A0)+
+000000AE  10FC 0000                 69              MOVE.B  #%00000000,(A0)+
+000000B2  10FC 0000                 70              MOVE.B  #%00000000,(A0)+
+000000B6  10FC 0000                 71              MOVE.B  #%00000000,(A0)+
+000000BA  10FC 0000                 72              MOVE.B  #%00000000,(A0)+
+000000BE  10FC 0000                 73              MOVE.B  #%00000000,(A0)+
+000000C2  10FC 0000                 74              MOVE.B  #%00000000,(A0)+
+000000C6  10FC 0000                 75              MOVE.B  #%00000000,(A0)+
+000000CA  10FC 0000                 76              MOVE.B  #%00000000,(A0)+
+000000CE  10FC 0000                 77              MOVE.B  #%00000000,(A0)+
+000000D2  10FC 0000                 78              MOVE.B  #%00000000,(A0)+
+000000D6  10FC 0080                 79              MOVE.B  #%10000000,(A0)+
+Line 80 ERROR: Undefined symbol
+000000DA  4279 004DBD16             80              CLR.W   BLCOUNTER
+000000E0  4EB9 000001DC             81              JSR     BLCOUNTBL
+000000E6  4CDF 0100                 82              MOVEM.L (A7)+,A0
+000000EA  4E75                      83              RTS
+000000EC                            84  
+000000EC                            85  
+000000EC                            86  ; -----------------------------------------------------------------------------
+000000EC                            87  BLUPD
+000000EC                            88  ; UPDATES THE LEVELS OF THE GAME
+000000EC                            89  ; INPUT     - NONE
+000000EC                            90  ; OUTPUT    - NONE
+000000EC                            91  ; MODIFIES  - NONE
+000000EC                            92  ; -----------------------------------------------------------------------------
+000000EC  48E7 C000                 93              MOVEM.L D0-D1,-(A7)
+Line 94 ERROR: Undefined symbol
+000000F0  3039 004DBD16             94              MOVE.W  BLCOUNTER,D0
+000000F6  B07C 0000                 95              CMP     #0,D0                   ;SI NO HAY BLOQUES SALTA
+000000FA  6600 006A                 96              BNE     .END
+000000FE                            97  .NEXTLEVEL  
+Line 98 ERROR: Undefined symbol
+000000FE  5279 005455B8             98              ADD.W   #1,LEVEL
+Line 99 ERROR: Invalid opcode
+00000104                            99              UTLSNDST
+Line 100 ERROR: Invalid opcode
+00000104                           100              UTLSNDS .SOUND,#1
+Line 101 ERROR: Undefined symbol
+00000104  3239 004DBD16            101              MOVE.W  LEVEL,D1
+0000010A  B27C 0004                102              CMP     #4,D1
+0000010E  6700 004E                103              BEQ     .WON
+00000112  B27C 0003                104              CMP     #3,D1              
+00000116  6700 0020                105              BEQ     .NIVEL3
+Line 106 ERROR: Undefined symbol
+0000011A  33FC BD16 005455B8       106              MOVE.W  #STASPACE,(STANEXT)
+00000122  4EB8 0054                107              JSR     BLLEV2
+Line 108 ERROR: Undefined symbol
+00000126  4EB9 004DBD16            108              JSR     PLRLEV2
+Line 109 ERROR: Undefined symbol
+0000012C  4EB9 004DBD16            109              JSR     BNXTLEV
+00000132  4EF9 00000166            110              JMP     .END
+00000138                           111  .NIVEL3
+00000138  B27C 0003                112              CMP.W   #3,D1
+0000013C  6600 0020                113              BNE     .WON
+Line 114 ERROR: Undefined symbol
+00000140  33FC BD16 005455B8       114              MOVE.W  #STASPACE,STANEXT
+00000148  4EB8 00A0                115              JSR     BLLEV3 
 Line 116 ERROR: Undefined symbol
-000000FC  33FC BD16 005455B8       116              MOVE.W  #STASPACE,STANEXT
-00000104  4EB8 0060                117              JSR     BLLEV3 
-00000108  4EF9 0000011A            118              JMP     .END
-Line 119 ERROR: Symbol value differs between first and second pass
-0000010E                           119  .WON        
-Line 120 ERROR: Undefined symbol
-0000010E  33FC BD16 005455B8       120              MOVE.W  #STAGOVR,STANEXT 
-Line 121 ERROR: Symbol value differs between first and second pass
-00000116                           121  .END 
-00000116  4CDF 0003                122              MOVEM.L (A7)+,D0-D1
-0000011A  4E75                     123              RTS    
-Line 124 ERROR: Symbol value differs between first and second pass
-0000011C= 6C657665 6C207570 ...    124  .SOUND      DC.L    'level up.wav',0      
-00000128                           125  ; -----------------------------------------------------------------------------
-Line 126 ERROR: Symbol value differs between first and second pass
-00000128                           126  BLPLOT
-00000128                           127  ; PLOTS THE BLOCKS
-00000128                           128  ; INPUT    - NONE
-00000128                           129  ; OUTPUT   - NONE
-00000128                           130  ; MODIFIES - NONE
-00000128                           131  ; -----------------------------------------------------------------------------
-Line 132 ERROR: Invalid opcode
-00000128                           132              UTLSPEN #$00000000
-00000128                           133      
-00000128  4242                     134              CLR.W   D2                      ; Y ARRIBA
-Line 135 ERROR: Undefined symbol
-0000012A  383C BD16                135              MOVE.W  #BLHEIGHT,D4            ; Y ABAJO
-Line 136 ERROR: Undefined symbol
-0000012E  41F9 004DBD16            136              LEA     COLORS,A0
-00000134                           137              
-Line 138 ERROR: Comma expected
-00000134                           138              MOVE.W  #BLROW-1,D7  
-00000134  227C 00000000            139              MOVE.L  #0,A1  
-Line 140 ERROR: Symbol value differs between first and second pass
-0000013A                           140  .FILAS      
-Line 141 ERROR: Invalid opcode
-0000013A                           141              UTLSFIL (A0)+ 
-Line 142 ERROR: Undefined symbol
-0000013A  363C BD16                142              MOVE.W  #BLWIDTH,D3             ; X DERECHA
-0000013E  4241                     143              CLR.W   D1                      ; X IZQUIERDA
-Line 144 ERROR: Comma expected
-00000140                           144              MOVE.W  #BLCOL-1,D5
+0000014C  4EB9 004DBD16            116              JSR     PLRLEV3
+Line 117 ERROR: Undefined symbol
+00000152  4EB9 004DBD16            117              JSR     BNXTLEV
+00000158  4EF9 00000166            118              JMP     .END
+0000015E                           119  .WON        
+Line 120 ERROR: Invalid opcode
+0000015E                           120              UTLSNDST
+Line 121 ERROR: Invalid opcode
+0000015E                           121              UTLSNDS .WINNER,#1
+Line 122 ERROR: Undefined symbol
+0000015E  33FC BD16 005455B8       122              MOVE.W  #STAWIN,STANEXT 
+00000166                           123  .END 
+00000166  4CDF 0003                124              MOVEM.L (A7)+,D0-D1
+0000016A  4E75                     125              RTS    
+0000016C= 6C657665 6C207570 ...    126  .SOUND      DC.L    'level up.wav',0 
+0000017C= 67616E61 722E7761 ...    127  .WINNER     DC.L    'ganar.wav',0     
+0000018C                           128  ; -----------------------------------------------------------------------------
+0000018C                           129  BLPLOT
+0000018C                           130  ; PLOTS THE BLOCKS
+0000018C                           131  ; INPUT    - NONE
+0000018C                           132  ; OUTPUT   - NONE
+0000018C                           133  ; MODIFIES - NONE
+0000018C                           134  ; -----------------------------------------------------------------------------
+0000018C  48E7 FFC0                135              MOVEM.L D0-D7/A0-A1,-(A7)
+Line 136 ERROR: Invalid opcode
+00000190                           136              UTLSPEN #$00000000
+00000190  4242                     137              CLR.W   D2                      ; Y ARRIBA
+Line 138 ERROR: Undefined symbol
+00000192  383C BD16                138              MOVE.W  #BLHEIGHT,D4            ; Y ABAJO
+Line 139 ERROR: Undefined symbol
+00000196  41F9 004DBD16            139              LEA     COLORS,A0
+0000019C                           140              
+Line 141 ERROR: Comma expected
+0000019C                           141              MOVE.W  #BLROW-1,D7  
+0000019C  227C 00000000            142              MOVE.L  #0,A1  
+Line 143 ERROR: Symbol value differs between first and second pass
+000001A2                           143  .FILAS      
+Line 144 ERROR: Invalid opcode
+000001A2                           144              UTLSFIL (A0)+ 
 Line 145 ERROR: Undefined symbol
-00000140  1C29 BD16                145              MOVE.B  BLMATRIX(A1),D6
-Line 146 ERROR: Symbol value differs between first and second pass
-00000144                           146  .COLUM                                    
-00000144  E31E                     147              ROL.B   #1,D6
-00000146  6400 0018                148              BCC     .VACIO                  
-0000014A  103C 0057                149              MOVE.B  #87,D0                  ; DIBUJAMOS EL CUADRADO
-0000014E  4E4F                     150              TRAP    #15
-Line 151 ERROR: Symbol value differs between first and second pass
-00000150                           151  .VACIO
-00000150  3203                     152              MOVE.W  D3,D1
-Line 153 ERROR: Undefined symbol
-00000152  0643 BD16                153              ADD.W   #BLWIDTH, D3
-00000156  51CD FFFC                154              DBRA    D5,.COLUM
-0000015A  5249                     155              ADDA.W  #1,A1
-0000015C  3404                     156              MOVE.W  D4,D2
-Line 157 ERROR: Undefined symbol
-0000015E  0644 BD16                157              ADD.W   #BLHEIGHT,D4
-00000162  51CF FFE2                158              DBRA    D7,.FILAS
-00000166  4E75                     159              RTS
-00000168                           160  ; -----------------------------------------------------------------------------
-Line 161 ERROR: Symbol value differs between first and second pass
-00000168                           161  BLCOUNTBL
-00000168                           162  ; COUNTS THE NUMBER OF BLOCKS OF THE MATRIX
-00000168                           163  ; INPUT    - NONE (BLMATRIX)
-00000168                           164  ; OUTPUT   - NONE
-00000168                           165  ; MODIFIES - NONE
-00000168                           166  ; -----------------------------------------------------------------------------
-00000168  48E7 FF20                167              MOVEM.L D0-D7/A2,-(A7)
-Line 168 ERROR: Comma expected
-0000016C                           168              MOVE.W  #BLROW-1,D5    
-0000016C  227C 00000000            169              MOVE.L  #0,A1                   ; RECORRE LAS FILAS (8 BYTES)
-Line 170 ERROR: Symbol value differs between first and second pass
-00000172                           170  .FILAS                                          
-Line 171 ERROR: Comma expected
-00000172                           171              MOVE.W  #BLCOL-1,D7               
-Line 172 ERROR: Undefined symbol
-00000172  1C29 BD16                172              MOVE.B  BLMATRIX(A1),D6
-Line 173 ERROR: Symbol value differs between first and second pass
-00000176                           173  .COLUM                       
-00000176  E31E                     174              ROL.B   #1,D6                   ; COMPRUEBA CADA ELEMENTO DE LA FILA
-00000178  6400 0020                175              BCC     .VACIO
-Line 176 ERROR: Undefined symbol
-0000017C  5279 005455B8            176              ADD.W   #1,BLCOUNTER
-Line 177 ERROR: Symbol value differs between first and second pass
-00000182                           177  .VACIO
-00000182  51CF 000A                178              DBRA    D7,.COLUM   
-00000186  5289                     179              ADDA.L  #1,A1
-00000188  51CD FFFC                180              DBRA    D5,.FILAS
-0000018C  4CDF 04FF                181              MOVEM.L (A7)+,D0-D7/A2
-00000190  4E75                     182              RTS
-Line 183 WARNING: END directive missing, starting address not set
+000001A2  363C BD16                145              MOVE.W  #BLWIDTH,D3             ; X DERECHA
+000001A6  4241                     146              CLR.W   D1                      ; X IZQUIERDA
+Line 147 ERROR: Comma expected
+000001A8                           147              MOVE.W  #BLCOL-1,D5
+Line 148 ERROR: Undefined symbol
+000001A8  1C29 BD16                148              MOVE.B  BLMATRIX(A1),D6
+Line 149 ERROR: Symbol value differs between first and second pass
+000001AC                           149  .COLUM                                    
+000001AC  E31E                     150              ROL.B   #1,D6
+000001AE  6400 0010                151              BCC     .VACIO                  
+000001B2  103C 0057                152              MOVE.B  #87,D0                  ; DIBUJAMOS EL CUADRADO
+000001B6  4E4F                     153              TRAP    #15
+Line 154 ERROR: Symbol value differs between first and second pass
+000001B8                           154  .VACIO
+000001B8  3203                     155              MOVE.W  D3,D1
+Line 156 ERROR: Undefined symbol
+000001BA  0643 BD16                156              ADD.W   #BLWIDTH, D3
+000001BE  51CD FFF4                157              DBRA    D5,.COLUM
+000001C2  5249                     158              ADDA.W  #1,A1
+000001C4  3404                     159              MOVE.W  D4,D2
+Line 160 ERROR: Undefined symbol
+000001C6  0644 BD16                160              ADD.W   #BLHEIGHT,D4
+000001CA  51CF FFDA                161              DBRA    D7,.FILAS
+000001CE  4CDF 03FF                162              MOVEM.L (A7)+,D0-D7/A0-A1
+000001D2  4E75                     163              RTS
+000001D4                           164  ; -----------------------------------------------------------------------------
+Line 165 ERROR: Symbol value differs between first and second pass
+000001D4                           165  BLCOUNTBL
+000001D4                           166  ; COUNTS THE NUMBER OF BLOCKS OF THE MATRIX
+000001D4                           167  ; INPUT    - NONE (BLMATRIX)
+000001D4                           168  ; OUTPUT   - NONE
+000001D4                           169  ; MODIFIES - NONE
+000001D4                           170  ; -----------------------------------------------------------------------------
+000001D4  48E7 FF20                171              MOVEM.L D0-D7/A2,-(A7)
+Line 172 ERROR: Comma expected
+000001D8                           172              MOVE.W  #BLROW-1,D1    
+000001D8  4283                     173              CLR.L   D3
+000001DA  227C 00000000            174              MOVE.L  #0,A1                   ; RECORRE LAS FILAS (8 BYTES)
+Line 175 ERROR: Symbol value differs between first and second pass
+000001E0                           175  .FILAS                                          
+Line 176 ERROR: Comma expected
+000001E0                           176              MOVE.W  #BLCOL-1,D2               
+Line 177 ERROR: Undefined symbol
+000001E0  1029 BD16                177              MOVE.B  BLMATRIX(A1),D0
+Line 178 ERROR: Symbol value differs between first and second pass
+000001E4                           178  .COLUM                       
+000001E4  E318                     179              ROL.B   #1,D0         
+000001E6  6400 0014                180              BCC     .VACIO
+000001EA  5243                     181              ADD.W   #1,D3
+Line 182 ERROR: Symbol value differs between first and second pass
+000001EC                           182  .VACIO
+000001EC  51CA 0006                183              DBRA    D2,.COLUM   
+000001F0  5289                     184              ADDA.L  #1,A1
+000001F2  51C9 FFF8                185              DBRA    D1,.FILAS
+Line 186 ERROR: Undefined symbol
+000001F6  33C3 005455B8            186              MOVE.W  D3,BLCOUNTER
+000001FC  4CDF 04FF                187              MOVEM.L (A7)+,D0-D7/A2
+00000200  4E75                     188              RTS
+00000202                           189  
+00000202                           190  
+00000202                           191  
+00000202                           192  
+Line 193 WARNING: END directive missing, starting address not set
 
-49 errors detected
+42 errors detected
 1 warning generated
 
 
 SYMBOL TABLE INFORMATION
 Symbol-name         Value
 -------------------------
-BLCOUNTBL           178
-BLCOUNTBL:COLUM     18E
-BLCOUNTBL:FILAS     186
-BLCOUNTBL:VACIO     19A
+BLCOUNTBL           1DC
+BLCOUNTBL:COLUM     1F4
+BLCOUNTBL:FILAS     1EC
+BLCOUNTBL:VACIO     1FC
 BLINIT              0
 BLINIT:LOOP         A
-BLLEV2              2C
-BLLEV2:LOOP         3A
-BLLEV3              60
-BLPLOT              130
-BLPLOT:COLUM        154
-BLPLOT:FILAS        146
-BLPLOT:VACIO        160
-BLUPD               B8
-BLUPD:END           11A
-BLUPD:NEXTLEVEL     CA
-BLUPD:NIVEL3        F8
-BLUPD:SOUND         120
-BLUPD:WON           112
+BLLEV2              54
+BLLEV3              A0
+BLPLOT              18C
+BLPLOT:COLUM        1B4
+BLPLOT:FILAS        1A6
+BLPLOT:VACIO        1C0
+BLUPD               EC
+BLUPD:END           166
+BLUPD:NEXTLEVEL     FE
+BLUPD:NIVEL3        138
+BLUPD:SOUND         16C
+BLUPD:WINNER        17C
+BLUPD:WON           15E

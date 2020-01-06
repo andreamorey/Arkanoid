@@ -29,7 +29,7 @@ BLINIT
 BLLEV2           
             MOVEM.L D0/A0,-(A7)
             LEA.L   BLMATRIX,A0
-            MOVE.W  #BLROW-1,D0             
+            MOVE.W  #BLROW-1,D0          
 .LOOP       
             MOVE.B  #%01011010,(A0)+
             DBRA    D0,.LOOP
@@ -72,6 +72,7 @@ BLUPD
             BNE     .END
 .NEXTLEVEL  
             ADD.W   #1,LEVEL
+            UTLSNDST
             UTLSNDS .SOUND,#1
             MOVE.W  LEVEL,D1
             CMP     #4,D1
@@ -92,11 +93,14 @@ BLUPD
             JSR     BNXTLEV
             JMP     .END
 .WON        
+            UTLSNDST
+            UTLSNDS .WINNER,#1
             MOVE.W  #STAWIN,STANEXT 
 .END 
             MOVEM.L (A7)+,D0-D1
             RTS    
-.SOUND      DC.L    'level up.wav',0      
+.SOUND      DC.L    'level up.wav',0 
+.WINNER     DC.L    'ganar.wav',0     
 ; -----------------------------------------------------------------------------
 BLPLOT
 ; PLOTS THE BLOCKS
@@ -158,6 +162,7 @@ BLCOUNTBL
             MOVE.W  D3,BLCOUNTER
             MOVEM.L (A7)+,D0-D7/A2
             RTS
+
 
 
 
